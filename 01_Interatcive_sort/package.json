@@ -1,0 +1,11 @@
+{
+  "name": "01_interatcive_sort",
+  "version": "1.0.0",
+  "description": "interactive sort task",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yulia",
+  "license": "ISC"
+}

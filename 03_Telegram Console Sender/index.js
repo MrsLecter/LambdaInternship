@@ -1,8 +1,13 @@
 require('dotenv').config();
+const WebSocket = require('ws');
 const axios = require('axios');
 const TelegramBot = require('node-telegram-bot-api');
-const {getFormattedData, isOldData, toRewriteData, toReadData} = require('./src/utils')
 const commander = require('commander')
+
+const ws = new WebSocket('ws://localhost:3000');
+
+const {getFormattedData, isOldData, toRewriteData, toReadData} = require('./src/utils')
+
 //create commander
 const program = new commander.Command();
 //all constraints
@@ -25,12 +30,24 @@ if (options.message){
     bot.sendMessage(process.env.CHAT_ID, options.message);   
 }
 if (options.photo){
-    bot.sendPhoto(process.env.CHAT_ID, options.photo);
+    bot.sendPhoto(process.env.CHAT_ID, 'https://http.cat');
 }
 if (options.help){
     console.log("'-m, --message', 'send a message to the bot'\n\'-p, --photo', 'send a message to the bot'\n");
 }
 // ---handle command line argments
+
+// ---handle websocket server messages
+function toSendPhoto(data) {
+    axios.get(IMAGE_URL).then(function (response) {
+        bot.sendPhoto(process.env.CHAT_ID, response.request.res.responseUrl);
+        }).catch(function (error) {
+            console.log(error);
+        });
+        console.log(`The user ${msg.from.first_name} ${(typeof (msg.from.last_name) === 'undefined') ? '' : msg.from.last_name} awake server`);
+}
+ws.onmessage = (response) => toSendPhoto(response.data)
+// ---handle websocket server messages
 
 //run bit
 const start = () =>{
@@ -116,39 +133,6 @@ const start = () =>{
                     bot.sendMessage(chatId, `Bank: Monobank\nCurrency: 🇺🇸 USD\nBuy : ${parsedData.buy}\nSale: ${parsedData.sale}\nTime: ${formatTime}`);
                 }
             }
-
-            /*
-            let formatTime = String(newDate.getHours()+':'+newDate.getMinutes() + ' ' + newDate.getDate().padStart(2, '0') + '/' + String(newDate.getMonth() + 1).padStart(2, '0') + '/' + newDate.getFullYear());
-       
-            if(bank.localeCompare('privat')){
-                bot.sendMessage(chatId, `Bank: Privatbank\nCurrency: 🇺🇸 USD\nBuy : ${data.buy}\nSale: ${data.sale}\nTime: ${formatTime}`);
-            }else if(bank.localeCompare('monobank')){
-                bot.sendMessage(chatId, `Bank: Monobank\nCurrency: 🇺🇸 USD\nBuy : ${data.rateBuy}\nSale: ${data.rateSell}\nTime: ${formatTime}`);
-            }
-            console.log(data)
-            getCurrencyData(data);
-            */
-            // if(data.localeCompare('privat')===0){
-            //     axios.get(RATE_URL_PRIVAT).then(function (response) {
-            //         let data = response.data[0];
-            //         let time = new Date();
-            //         let formatTime = String(time.getHours()+':'+time.getMinutes() + ' ' + time.getDate()).padStart(2, '0') + '/' + String(time.getMonth() + 1).padStart(2, '0') + '/' + time.getFullYear();
-            //         bot.sendMessage(chatId, `Bank: Privatbank\nCurrency: 🇺🇸 USD\nBuy : ${data.buy}\nSale: ${data.sale}\nTime: ${formatTime}`);
-            //     }).catch(function (error) {
-            //         console.log(error);
-            //         bot.sendMessage(chatId,error.response.data.errorDescription);
-            //     });
-            // }else if(data.localeCompare('monobank')===0){
-            //     axios.get(RATE_URL_MONOBANK).then(function (response) {
-            //         let data = response.data[0];
-            //         let time = new Date();
-            //         let formatTime = String(time.getHours()+':'+time.getMinutes() + ' ' + time.getDate()).padStart(2, '0') + '/' + String(time.getMonth() + 1).padStart(2, '0') + '/' + time.getFullYear();
-            //         bot.sendMessage(chatId, `Bank: Monobank\nCurrency: 🇺🇸 USD\nBuy : ${data.rateBuy}\nSale: ${data.rateSell}\nTime: ${formatTime}`);
-            //     }).catch(function (error) {
-            //         console.log(error);
-            //         bot.sendMessage(chatId,error.response.data.errorDescription);
-            //     });
-            // }
         }
         
     });

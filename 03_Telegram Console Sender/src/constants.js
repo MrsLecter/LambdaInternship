@@ -1,9 +1,12 @@
 const RATE_URL_PRIVAT =
   "https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5";
 const RATE_URL_MONOBANK = "https://api.monobank.ua/bank/currency";
+
 const IMAGE_URL = 'https://picsum.photos/200/300';
+
 const STICKER_URL =
   "https://cdn.tlgrm.app/stickers/9b3/6f4/9b36f4d8-203f-3e1e-b31f-78519f4f9ba4/192/11.webp";
+
 const API_WEATHER = `https://api.openweathermap.org/data/2.5/forecast?lat=${process.env.ODESSA_LAT}&lon=${process.env.ODESSA_LONG}&exclude=daily&units=metric&lang=ru&appid=${process.env.WEATHER_API_KEY}`;
 const DAYS = [
   "воскресенье",
@@ -33,6 +36,7 @@ MAX_HOUR_VALUE = 24;
 STORAGE_PRIVAT = './data/storagePrivat.txt';
 STORAGE_MONOBANK = './data/storageMono.txt';
 
+TWENTYFIVE_MINUTES = 1000 * 60 * 25;
 
 module.exports = {
   RATE_URL_PRIVAT,
@@ -44,5 +48,6 @@ module.exports = {
   MONTHS,
   MAX_HOUR_VALUE,
   STORAGE_PRIVAT,
-  STORAGE_MONOBANK
+  STORAGE_MONOBANK,
+  TWENTYFIVE_MINUTES
 };

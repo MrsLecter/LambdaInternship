@@ -30,6 +30,10 @@ const MONTHS = [
 ];
 MAX_HOUR_VALUE = 24;
 
+STORAGE_PRIVAT = './data/storagePrivat.txt';
+STORAGE_MONOBANK = './data/storageMono.txt';
+
+
 module.exports = {
   RATE_URL_PRIVAT,
   RATE_URL_MONOBANK,
@@ -39,4 +43,6 @@ module.exports = {
   DAYS,
   MONTHS,
   MAX_HOUR_VALUE,
+  STORAGE_PRIVAT,
+  STORAGE_MONOBANK
 };

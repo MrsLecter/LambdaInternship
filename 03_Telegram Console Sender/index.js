@@ -1,7 +1,7 @@
 require('dotenv').config();
 const axios = require('axios');
 const TelegramBot = require('node-telegram-bot-api');
-const {getFormattedData} = require('./src/utils')
+const {getFormattedData, isOldData, toRewriteData, toReadData} = require('./src/utils')
 const commander = require('commander')
 //create commander
 const program = new commander.Command();
@@ -96,27 +96,59 @@ const start = () =>{
                 console.log(error);
             });
         }else if(data.length > 1){
-            if(data.localeCompare('privat')===0){
-                axios.get(RATE_URL_PRIVAT).then(function (response) {
-                    let data = response.data[0];
-                    let time = new Date();
-                    let formatTime = String(time.getHours()+':'+time.getMinutes() + ' ' + time.getDate()).padStart(2, '0') + '/' + String(time.getMonth() + 1).padStart(2, '0') + '/' + time.getFullYear();
-                    bot.sendMessage(chatId, `Bank: Privatbank\nCurrency: 🇺🇸 USD\nBuy : ${data.buy}\nSale: ${data.sale}\nTime: ${formatTime}`);
-                }).catch(function (error) {
-                    console.log(error);
-                    bot.sendMessage(chatId,error.response.data.errorDescription);
-                });
-            }else if(data.localeCompare('monobank')===0){
-                axios.get(RATE_URL_MONOBANK).then(function (response) {
-                    let data = response.data[0];
-                    let time = new Date();
-                    let formatTime = String(time.getHours()+':'+time.getMinutes() + ' ' + time.getDate()).padStart(2, '0') + '/' + String(time.getMonth() + 1).padStart(2, '0') + '/' + time.getFullYear();
-                    bot.sendMessage(chatId, `Bank: Monobank\nCurrency: 🇺🇸 USD\nBuy : ${data.rateBuy}\nSale: ${data.rateSell}\nTime: ${formatTime}`);
-                }).catch(function (error) {
-                    console.log(error);
-                    bot.sendMessage(chatId,error.response.data.errorDescription);
-                });
+            if(isOldData(data)){
+                toRewriteData(data).then(parsedData => {
+                    const date = new Date(parsedData.recordTime);
+                    let formatTime = String(date.getHours()+':'+date.getMinutes() + ' ' + date.getDate()).padStart(2, '0') + '/' + String(date.getMonth() + 1).padStart(2, '0') + '/' + date.getFullYear();
+                    if(data.localeCompare('privat')===0){
+                        bot.sendMessage(chatId, `Bank: Privatbank\nCurrency: 🇺🇸 USD\nBuy : ${parsedData.buy}\nSale: ${parsedData.sale}\nTime: ${formatTime}`);
+                    }else if(data.localeCompare('monobank')===0){
+                        bot.sendMessage(chatId, `Bank: Monobank\nCurrency: 🇺🇸 USD\nBuy : ${parsedData.buy}\nSale: ${parsedData.sale}\nTime: ${formatTime}`);
+                    }
+                })
+            }else{
+                let parsedData = toReadData(data);
+                const date = new Date(parsedData.recordTime);
+                let formatTime = String(date.getHours()+':'+date.getMinutes() + ' ' + date.getDate()).padStart(2, '0') + '/' + String(date.getMonth() + 1).padStart(2, '0') + '/' + date.getFullYear();
+                if(data.localeCompare('privat')===0){
+                    bot.sendMessage(chatId, `Bank: Privatbank\nCurrency: 🇺🇸 USD\nBuy : ${parsedData.buy}\nSale: ${parsedData.sale}\nTime: ${formatTime}`);
+                }else if(data.localeCompare('monobank')===0){
+                    bot.sendMessage(chatId, `Bank: Monobank\nCurrency: 🇺🇸 USD\nBuy : ${parsedData.buy}\nSale: ${parsedData.sale}\nTime: ${formatTime}`);
+                }
             }
+
+            /*
+            let formatTime = String(newDate.getHours()+':'+newDate.getMinutes() + ' ' + newDate.getDate().padStart(2, '0') + '/' + String(newDate.getMonth() + 1).padStart(2, '0') + '/' + newDate.getFullYear());
+       
+            if(bank.localeCompare('privat')){
+                bot.sendMessage(chatId, `Bank: Privatbank\nCurrency: 🇺🇸 USD\nBuy : ${data.buy}\nSale: ${data.sale}\nTime: ${formatTime}`);
+            }else if(bank.localeCompare('monobank')){
+                bot.sendMessage(chatId, `Bank: Monobank\nCurrency: 🇺🇸 USD\nBuy : ${data.rateBuy}\nSale: ${data.rateSell}\nTime: ${formatTime}`);
+            }
+            console.log(data)
+            getCurrencyData(data);
+            */
+            // if(data.localeCompare('privat')===0){
+            //     axios.get(RATE_URL_PRIVAT).then(function (response) {
+            //         let data = response.data[0];
+            //         let time = new Date();
+            //         let formatTime = String(time.getHours()+':'+time.getMinutes() + ' ' + time.getDate()).padStart(2, '0') + '/' + String(time.getMonth() + 1).padStart(2, '0') + '/' + time.getFullYear();
+            //         bot.sendMessage(chatId, `Bank: Privatbank\nCurrency: 🇺🇸 USD\nBuy : ${data.buy}\nSale: ${data.sale}\nTime: ${formatTime}`);
+            //     }).catch(function (error) {
+            //         console.log(error);
+            //         bot.sendMessage(chatId,error.response.data.errorDescription);
+            //     });
+            // }else if(data.localeCompare('monobank')===0){
+            //     axios.get(RATE_URL_MONOBANK).then(function (response) {
+            //         let data = response.data[0];
+            //         let time = new Date();
+            //         let formatTime = String(time.getHours()+':'+time.getMinutes() + ' ' + time.getDate()).padStart(2, '0') + '/' + String(time.getMonth() + 1).padStart(2, '0') + '/' + time.getFullYear();
+            //         bot.sendMessage(chatId, `Bank: Monobank\nCurrency: 🇺🇸 USD\nBuy : ${data.rateBuy}\nSale: ${data.rateSell}\nTime: ${formatTime}`);
+            //     }).catch(function (error) {
+            //         console.log(error);
+            //         bot.sendMessage(chatId,error.response.data.errorDescription);
+            //     });
+            // }
         }
         
     });

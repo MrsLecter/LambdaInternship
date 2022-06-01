@@ -1,5 +1,8 @@
 require("dotenv").config();
-const { DAYS, MONTHS, MAX_HOUR_VALUE } = require("./constants");
+const axios = require('axios');
+const fs = require('fs');
+const { DAYS, MONTHS, MAX_HOUR_VALUE, RATE_URL_PRIVAT,RATE_URL_MONOBANK, STORAGE_PRIVAT, STORAGE_MONOBANK } = require("./constants");
+
 
 function getFormattedData(data, hourInterval = 3) {
   let formatted = "";
@@ -65,4 +68,80 @@ function getFormattedData(data, hourInterval = 3) {
   return formatted;
 }
 
-module.exports = { getFormattedData };
+function toReadData(bank){
+  let fileRoute;
+  //coose bank options
+  if(bank.localeCompare('privat')===0){
+    fileRoute = STORAGE_PRIVAT;
+  }else if(bank.localeCompare('monobank')===0){
+    fileRoute = STORAGE_MONOBANK;
+  }
+  //read file
+  let fileData = fs.readFileSync(fileRoute, "utf8", function(error){
+    if(error) console.log(error); });
+  let parsedData = JSON.parse(fileData);
+  return parsedData;
+}
+
+
+function isOldData(bank){
+  let parsedData = toReadData(bank);
+  //calculate the time interval between the present date and the date of recording, translated into minutes
+  let timeGap = (new Date().getTime() - parsedData.recordTime)/60000;
+  //if time gap more then 2 minutes
+  if(timeGap  > 2){
+    return true;
+  }else if(timeGap <= 2){
+    return false;
+  }
+}
+
+
+async function toRewriteData(bank){
+  let fileRoute;
+  let bankUrl;
+
+  //coose bank options
+  if(bank.localeCompare('privat')===0){
+    fileRoute = STORAGE_PRIVAT;
+    bankUrl = RATE_URL_PRIVAT;
+
+  }else if(bank.localeCompare('monobank')===0){
+    fileRoute = STORAGE_MONOBANK;
+    bankUrl = RATE_URL_MONOBANK;
+  }
+
+  return axios.get(bankUrl).then(function (response) {
+    //data from bank
+    let data = response.data[0];
+    //time now
+    let newDate = new Date();
+    //storage for data
+    let obj;
+    //choose storage template
+    if(bank.localeCompare('privat')===0){
+      obj = {
+        "bank": bank,
+        "buy": data.buy,
+        "sale": data.sale,
+        "recordTime": newDate.getTime()
+      };
+    }else if(bank.localeCompare('monobank')===0){
+      obj = {
+        "bank": bank,
+        "buy": data.rateBuy,
+        "sale": data.rateSell,
+        "recordTime": newDate.getTime()
+      };
+    }
+
+    fs.writeFile(fileRoute, JSON.stringify(obj), function(error){
+        if(error) console.log(error); 
+    });
+    return obj;
+  }).catch(function (error) {
+    console.log(error);
+  });
+}
+
+module.exports = { getFormattedData, isOldData, toRewriteData, toReadData };

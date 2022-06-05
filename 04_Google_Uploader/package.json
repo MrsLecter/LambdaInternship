@@ -1,0 +1,17 @@
+{
+  "name": "04_google_uploader",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "googleapis": "^39.2.0",
+    "inquirer": "^8.2.4",
+    "prettylink": "^1.0.0"
+  },
+  "description": ""
+}

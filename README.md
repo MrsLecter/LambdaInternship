@@ -2,7 +2,7 @@
 
 # Project
 
-## Interactive sort
+## 01 Interactive sort
 ### Code: https://github.com/MrsLecter/internship/tree/main/01_Interatcive_sort
 ### Functionality
 - Sort words alphabetically
@@ -14,12 +14,12 @@
 - To exit the program, the user need only enter <code>exit</code> otherwise the program will repeat
  itself again and again, asking for new data and suggesting sorting.
  
- ## Primitive DB
+ ## 02 Primitive DB
 ### Code: https://github.com/MrsLecter/internship/tree/main/02_Primitive%20DB
 ### Functionality
 - create simple database by using inquirer
 
- ## Telegram bot
+ ## 03 Telegram bot
 ### Code: https://github.com/MrsLecter/internship/tree/main/03_Telegram%20Console%20Sender
 ### Functionality
 - Send a message to the Telegram bot from the console on command:
@@ -31,7 +31,7 @@
 - Returns the weather forecast for every 3 hours or for every 6 hours at the user's request.
 - Allows to find out the dollar exchange rate (using PrivatBank and Monobank API)
 
- ## Google Uploader
+ ## 04 Google Uploader
 ### Code: https://github.com/MrsLecter/internship/tree/main/04_Google_Uploader
 ### Functionality
 - provides a console interface in which the user has the ability to drag the picture, rename it (or discard it), and shorten the final link.

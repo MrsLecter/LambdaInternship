@@ -12,14 +12,28 @@ export function getPropValue(data: object): string {
 }
 
 
-type resp = {
-  [key: string]: any;
-};
-
-
 //format response to string 'url: isDone: True'
 export async function getFormattedResponse(response: resp): Promise<string> {
   //string because of formatting True or False
   const isDone: string = getPropValue(await response.data);
   return `${response.config.url}: isDone - ${isDone}`;
+}
+
+type resp = {
+  [key: string]: any;
+};
+
+
+//recursive way to find 'isDone' value
+export function getPropValueReсursive(data: resp): boolean|undefined{
+  let props: Array<string> = Object.keys(data);
+  if(props.includes('isDone')){
+      return data['isDone']
+  }
+  for(const prop of props){
+      if(typeof (data[prop]) === 'object' && !Array.isArray(data[prop])){
+          console.log('>>'+data[prop], )
+          return getPropValueReсursive(data[prop])
+      }
+  }
 }

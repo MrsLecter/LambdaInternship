@@ -1,14 +1,17 @@
-const { URL } = require("./data/listOfUrls");
-const axios = require("axios").default;
-const { getFormattedResponse } = require("./src/utils");
+import {URL} from "./data/listOfUrls";
+import axios from 'axios';
+import  {getFormattedResponse} from "./src/utils";
 
-async function toHandleUrl(url, counter = 1) {
+async function toHandleUrl(url:string, counter:number = 1): Promise<void | string>{
   //counter to count the number of recursive calls
-  if (counter == 4) return 1;
+  if (counter == 4) return '1';
   try {
-    const response = await axios.get(url, {
+    type resp = {
+      [key: string]: any;
+    };
+    const response: resp  = await axios.get(url, {
       //pass without errors 400 and above
-      validateStatus: function (status) {
+      validateStatus: function (status: number): boolean {
         return status < 400;
       },
     });
@@ -28,17 +31,19 @@ async function toHandleUrl(url, counter = 1) {
   }
 }
 
-async function toStartQueue(URL) {
-  let arr = [];
+
+async function toStartQueue(URL: Array<string>): Promise<Array<string>> {
+  let arr: Array<string> = [];
   for (const url of URL) {
-    await toHandleUrl(url)
-      .then((res) => arr.push(res))
+    let resp: string | void = await toHandleUrl(url)
+      .then((res:string|void):string => res+'')
       .catch((err) => console.log(err));
+    arr.push(resp + '');
   }
   return arr;
 }
 
 
 toStartQueue(URL)
-  .then((res) => console.log(res.join("\n")))
+  .then((res: Array<string>):void => console.log(res.join("\n")))
   .catch((err) => console.log(err));

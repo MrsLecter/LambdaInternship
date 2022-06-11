@@ -22,4 +22,19 @@ async function getFormattedResponse(response) {
   return `${response.config.url}: isDone - ${isDone}`;
 }
 
+//reqursive way to find 'isDone' value
+function getPropValueReсursive(data){
+    console.log(data)
+    let props = Object.keys(data);
+    if(props.includes('isDone')){
+        return data['isDone']
+    }
+    for(const prop of props){
+        if(typeof (data[prop]) === 'object' && !Array.isArray(data[prop])){
+            console.log('>>'+data[prop], )
+            return getPropValueReсursive(data[prop])
+        }
+    }
+}
+
 module.exports = { getPropValue, getFormattedResponse };

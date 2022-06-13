@@ -1,4 +1,3 @@
-require('dotenv').config();
 const WebSocket = require('ws');
 const axios = require('axios');
 const TelegramBot = require('node-telegram-bot-api');
@@ -11,9 +10,9 @@ const {getFormattedData, isOldData, toRewriteData, toReadData} = require('./src/
 //create commander
 const program = new commander.Command();
 //all constraints
-const {RATE_URL_PRIVAT,RATE_URL_MONOBANK,IMAGE_URL, STICKER_URL, API_WEATHER} = require('./src/constants');
+const {RATE_URL_PRIVAT,RATE_URL_MONOBANK,IMAGE_URL, STICKER_URL, API_WEATHER, BOT_TOKEN, CHAT_ID} = require('./src/constants');
 //bot token
-const token = process.env.BOT_TOKEN;
+const token = BOT_TOKEN;
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, {polling: true});
 
@@ -27,10 +26,10 @@ program.parse(process.argv);
 
 const options = program.opts();
 if (options.message){
-    bot.sendMessage(process.env.CHAT_ID, options.message);   
+    bot.sendMessage(CHAT_ID, options.message);   
 }
 if (options.photo){
-    bot.sendPhoto(process.env.CHAT_ID, 'https://http.cat');
+    bot.sendPhoto(CHAT_ID, 'https://http.cat');
 }
 if (options.help){
     console.log("'-m, --message', 'send a message to the bot'\n\'-p, --photo', 'send a message to the bot'\n");
@@ -40,7 +39,7 @@ if (options.help){
 // ---handle websocket server messages
 function toSendPhoto(data) {
     axios.get(IMAGE_URL).then(function (response) {
-        bot.sendPhoto(process.env.CHAT_ID, response.request.res.responseUrl);
+        bot.sendPhoto(CHAT_ID, response.request.res.responseUrl);
         }).catch(function (error) {
             console.log(error);
         });

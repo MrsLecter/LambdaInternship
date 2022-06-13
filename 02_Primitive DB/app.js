@@ -8,7 +8,7 @@ const questions = [
   {
     type: "input",
     name: "name",
-    message: "Enter the user's name. To cancel press Enter: ",
+    message: "Enter the user's name. To cancel press only Enter: ",
   },
   {
     type: "list",
@@ -37,7 +37,7 @@ const questions = [
   },
   {
     type: "confirm",
-    name: "dbquestion",
+    name: "findondb",
     message: "Do you want to find a user by name in the database?",
     when(answers) {
       return !answers.name;
@@ -45,10 +45,10 @@ const questions = [
   },
   {
     type: "input",
-    name: "dbuser",
+    name: "username",
     message: "Enter users name to find in database: ",
     when(answers) {
-      return !answers.name && answers.dbquestion;
+      return !answers.name && answers.findondb;
     },
   },
 ];
@@ -56,10 +56,11 @@ const questions = [
 function ask() {
   inquirer.prompt(questions).then((answers) => {
     data.push(answers);
-    if (answers.dbquestion) {
+    
+    if (answers.findondb) {
       console.log("Your database: " + access.toReadFile() + "\n");
-      console.log(utils.toFindPerson(answers.dbuser));
-    } else if (!answers.dbquestion && !answers.name) {
+      console.log(utils.toFindPerson(answers.username));
+    } else if (!answers.findondb && !answers.name) {
       utils.toAddData(data);
       console.log("End");
     } else {

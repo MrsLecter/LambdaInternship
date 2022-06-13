@@ -1,5 +1,5 @@
-const QHELLO = 'Hello! Enter some words and digits deviding the in spaces: ';
-const QOPTIONS = '"How would you like to sort values:\n\
+const HELLO = 'Hello! Enter some words and digits deviding the in spaces: ';
+const CHOOSE_OPTIONS = '"How would you like to sort values:\n\
 1. Sort words alphabetically\n\
 2. Show [numbers] from lower to higher\n\
 3. Show [numbers] from higher to lower\n\
@@ -10,4 +10,4 @@ const QOPTIONS = '"How would you like to sort values:\n\
 Select 1-6 and press enter"\n';
 const BYE = 'Goodbye! ƪ(ړײ)ƪ​​ See you later!';
 
-module.exports = {QHELLO, QOPTIONS, BYE}
+module.exports = {HELLO, CHOOSE_OPTIONS, BYE}

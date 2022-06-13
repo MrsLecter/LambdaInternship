@@ -1,4 +1,3 @@
-require("dotenv").config();
 const axios = require('axios');
 const fs = require('fs');
 const { DAYS, MONTHS, MAX_HOUR_VALUE, RATE_URL_PRIVAT,RATE_URL_MONOBANK, STORAGE_PRIVAT, STORAGE_MONOBANK } = require("./constants");

@@ -72,11 +72,20 @@ function returnIntersection(files_amount) {
   }
   return `Word combinations that are in all ${files_amount} files: ${rez_arr.length}`;
 }
+let intersectoin_start0 = performance.now();
+let int_words0 = returnIntersection(10);
+let intersectoin_finish0 = performance.now();
+console.log(int_words0); //10 files ==> 1764; 20 files ==> 441
+console.log("time: " , (intersectoin_finish0 - intersectoin_start0), " msec ");
+
 
 let intersectoin_start = performance.now();
 let int_words = returnIntersection(20);
 let intersectoin_finish = performance.now();
 console.log(int_words); //10 files ==> 1764; 20 files ==> 441
-console.log("time: " + (intersectoin_finish - intersectoin_start) + " msec ");
+console.log("time: " , (intersectoin_finish - intersectoin_start) , " msec ");
 //10 files => time: 1517.2353459997103 msec
 //20 files => time: 2271.9264980000444 msec
+
+
+

@@ -23,7 +23,7 @@ function toTestUnique(files_amount) {
 }
 
 let uniq_s = performance.now();
-let uniq_rez = toTestUnique(20);//129240 words
+let uniq_rez = toTestUnique(10);//129240 words
 let uniq_e = performance.now();
 console.log("unique time: ", uniq_e - uniq_s, "words: ", uniq_rez);
 

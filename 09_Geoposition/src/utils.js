@@ -11,18 +11,24 @@ function toReturnLocationByIp(user_ip, ip_table) {
   return false;
 }
 
+
 function toConvertIPtoNumber(ip) {
+  const { NORMAL_POWER } = require("./constants");
   let arr = ip.split(".");
   let number =
-    arr[0] * 256 ** 3 + arr[1] * 256 ** 2 + arr[2] * 256 + arr[3] * 1;
+    arr[0] * NORMAL_POWER ** 3 +
+    arr[1] * NORMAL_POWER ** 2 +
+    arr[2] * NORMAL_POWER +
+    arr[3] * 1;
   return number;
 }
+
 
 function getDataTable(tablePath) {
   const fs = require("fs");
   const data = fs.readFileSync(tablePath, { encoding: "utf8", flag: "r" });
   const arrData = data
-  //remove nesting like '"word"'
+    //remove nesting like '"word"'
     .replaceAll('"', "")
     .split("\r\n")
     .map((item) => {
@@ -31,5 +37,6 @@ function getDataTable(tablePath) {
     });
   return arrData;
 }
+
 
 module.exports = { toReturnLocationByIp, toConvertIPtoNumber, getDataTable };

@@ -4,8 +4,7 @@ const {
   toConvertIPtoNumber,
   getDataTable,
 } = require("./src/utils");
-
-const TABLE_PATH = "./data/location.csv";
+const {TABLE_PATH} = require("./src/constants");
 
 const app = express();
 

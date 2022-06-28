@@ -1,9 +1,16 @@
-let inputObj = {};
+import {RequestHandler} from "express";
 const { validationResult } = require('express-validator');
-const {getDeadline, getCalculatedTimeMs} = require("../dist/deadline");
-const {getCost} = require("../dist/cost");
+const {getDeadline, getCalculatedTimeMs} = require("../utils/deadline");
+const {getCost} = require("../utils/cost");
 
-exports.postInfo = (req, res, next) => {
+type inputType = {
+    "language": string;
+    "mimetype": string;
+    "count": number
+}
+let inputObj: inputType;
+
+export const postInfo: RequestHandler = (req, res, next) => {
     //handle validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -11,14 +18,15 @@ exports.postInfo = (req, res, next) => {
     }
     const input = req.body;
     inputObj = {
-        "language": input.language,
+        "language" : input.language,
         "mimetype": input.mimetype,
         "count": input.count
-    };
+    }
+
     res.redirect('/correctarium');
 };
 
-exports.getInfo = (req, res, next) => {
+export const getInfo:RequestHandler = (req, res, next) => {
     const calculatedCost = getCost(inputObj.language, inputObj.count, inputObj.mimetype);
     const timeForWork = getCalculatedTimeMs(inputObj.language, inputObj.count, inputObj.mimetype);
     

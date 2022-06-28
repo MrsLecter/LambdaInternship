@@ -14,6 +14,6 @@ export function getCost(language: lang, signCount: number, docType: mime): numbe
     if(docType === "other"){
         sign_cost += sign_cost * percent;
     }
-    return sign_cost;
+    return +sign_cost.toFixed(3);
 };
 

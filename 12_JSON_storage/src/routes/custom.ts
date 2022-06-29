@@ -1,5 +1,5 @@
-import {Router} from 'express';
-import {getСustom, createCustom} from "../controllers/custom"
+import { Router } from "express";
+import { getСustom, createCustom } from "../controllers/custom";
 
 const router = Router();
 

@@ -147,6 +147,21 @@ Despciption
 </p>
 </details>
 
+
+<details><summary>11_Authorization</summary>
+<p>
+
+#### [*Watch code*](https://github.com/MrsLecter/internship/tree/main/11_Authorization)
+
+```
+Despciption
+- authorization use jwt token
+
+ ```
+</p>
+</details>
+
+
 <details><summary>12_JSON_storage</summary>
 <p>
 

@@ -8,6 +8,7 @@
 
 ```
 Functionality
+ 
 - Sort words alphabetically
 - Show numbers from lower to higher
 - Show numbers from bigger to smaller
@@ -27,6 +28,7 @@ Functionality
 
 ```
 Functionality
+ 
 - create simple database by using inquirer
  ```
 </p>
@@ -39,6 +41,7 @@ Functionality
 
 ```
 Functionality
+ 
 - Send a message to the Telegram bot from the console on command:
  <code>node app.js message ‘Your message’</code>
 - Send a photo that you drag to the console (or manually type the correct path to the photo on your PC) on command:
@@ -58,6 +61,7 @@ Functionality
 
 ```
 Functionality
+ 
 - provides a console interface in which the user has the ability to drag the picture,
 rename it (or discard it), and shorten the final link.
  ```
@@ -70,11 +74,12 @@ rename it (or discard it), and shorten the final link.
 #### [*Watch code*](https://github.com/MrsLecter/internship/tree/main/06_Instagram)
 
 ```
-Despciption
+Description
 
 - Folder contains 20 files with 100,000 word combinations in each
 
 Functionality
+ 
 - determines how many unique usernames there are in all the specified files;
 - determines how many usernames occur in all 20 files;
 - determines how many usernames occur in at least 10 files
@@ -88,7 +93,7 @@ Functionality
 #### [*Watch code*](https://github.com/MrsLecter/internship/tree/main/07_Vacation_grouping)
 
 ```
-Despciption
+Description
 
 - reformatting the json file
 
@@ -102,7 +107,7 @@ Despciption
 #### [*Watch code*](https://github.com/MrsLecter/internship/tree/main/08_JSON_sort)
 
 ```
-Despciption
+Description
 
 - File contains a list of 20 endpoints
 
@@ -140,7 +145,8 @@ Functionality
 #### [*Watch code*](https://github.com/MrsLecter/internship/tree/main/10_Correctarium)
 
 ```
-Despciption
+Description
+ 
 - write an algorithm for calculating the cost, turnaround time and due date (deadline)
 
  ```
@@ -154,7 +160,8 @@ Despciption
 #### [*Watch code*](https://github.com/MrsLecter/internship/tree/main/11_Authorization)
 
 ```
-Despciption
+Description
+ 
 - authorization use jwt token
 
  ```
@@ -168,7 +175,8 @@ Despciption
 #### [*Watch code*](https://github.com/MrsLecter/internship/tree/main/12_JSON_storage)
 
 ```
-Despciption
+Description
+ 
 - the user creates his own root;
 - the router is readable and writable
 

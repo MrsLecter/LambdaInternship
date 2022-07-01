@@ -3,17 +3,17 @@ const mongo = require('mongodb');
 const {getDB} = require('./database');
 
 
-function saveUser(obj){
+async function saveUser(obj){
     const db = getDB();
     let dbOp;
-    db.collection('users').insertOne(obj)
+    await db.collection('users').insertOne(obj)
     .catch(err =>  {throw new Error(err)});
 }
 
 
-function findUserByEmail(email){
+async function findUserByEmail(email){
     const db = getDB();
-    return db.collection('users').find({"email": email}).next()
+    return await db.collection('users').find({"email": email}).next()
     .then(data => {
         return data;
     })
@@ -21,16 +21,16 @@ function findUserByEmail(email){
 }
 
 
-function saveTokens(obj){
+async function saveTokens(obj){
     const db = getDB();
-    db.collection('user_data').updateOne({"user": 'current'},{ $set: {"email": obj.email}, $set: {"refreshToken": obj.refreshToken}})
+    await db.collection('user_data').updateOne({"user": 'current'},{ $set: {"email": obj.email}, $set: {"refreshToken": obj.refreshToken}})
     .catch(err =>  {throw new Error(err)});
 }
 
 
-function findTokens(){
+async function findTokens(){
     const db = getDB();
-    return db.collection('user_data').find({"user": "current"}).next()
+    return await db.collection('user_data').find({"user": "current"}).next()
     .then(data => {
         return data;
     })

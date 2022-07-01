@@ -1,14 +1,12 @@
-const mongoConnect = require("../util/database").mongoConnect;
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { v4: uuid } = require('uuid')
 const url = require('url');
 require('dotenv').config();
 
 
-const { saveUser, findUserByEmail, saveTokens, findTokens } = require("../util/dataAccess");
-const {getRandomTTL} = require("../util/utils");
+const { saveUser, findUserByEmail, findTokens } = require("../util/dataAccess");
+const {getTokens} = require("../util/utils");
 
 
 //user registration
@@ -59,13 +57,8 @@ exports.logIn = (req, res, next) => {
       bcrypt.compare(password, user.password)
       .then(isMatch => {
         if(isMatch){
-            //time to live in ms
-            const ttl = getRandomTTL();
-            const refreshToken = uuid();
-            const token = jwt.sign({email: user.email}, process.env.SECRET_KEY, {expiresIn: ttl });
-            saveTokens({"user": "curent","email": user.email, "accessToken": token,  "refreshToken": refreshToken});
             return res.status(202)
-            .json({ "message": "Accepted", "accessToken": token, "refreshToken": refreshToken, "TTL": ttl});
+            .json({ "message": "Accepted", ...getTokens(user.email)});
         }else{
             return res
             .status(403)
@@ -113,13 +106,9 @@ exports.refresh = (req, res, next) => {
   findTokens()
   .then(data => {
     if(data['refreshToken'].localeCompare(token)===0){
-      const ttl = getRandomTTL();
-      const refreshToken = uuid();
-      const token = jwt.sign({email: data['email']}, process.env.SECRET_KEY, {expiresIn: ttl });
-      saveTokens({"user": "current", "refreshToken": refreshToken});
-      return res.status(202).json({ "message": "New refresh token received", "accessToken": token, "refreshToken": refreshToken, "TTL": ttl});
+      return res.status(202).json({ "message": "New refresh token received", ...getTokens(data['email'])});
     }else{
-      return res.status(403).json({"message": "Forbidden. Incorrect data" });
+      return res.status(404).json({"message": "Not found. Incorrect data" });
     }
   })
 };

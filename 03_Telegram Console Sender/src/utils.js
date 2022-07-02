@@ -2,7 +2,7 @@ const axios = require('axios');
 const fs = require('fs');
 const { DAYS, MONTHS, MAX_HOUR_VALUE, RATE_URL_PRIVAT,RATE_URL_MONOBANK, STORAGE_PRIVAT, STORAGE_MONOBANK } = require("./constants");
 
-
+//formatted data for weather
 function getFormattedData(data, hourInterval = 3) {
   let formatted = "";
   let tempDay = 0;
@@ -82,7 +82,7 @@ function toReadData(bank){
   return parsedData;
 }
 
-
+//check currency data in storage
 function isOldData(bank){
   let parsedData = toReadData(bank);
   //calculate the time interval between the present date and the date of recording, translated into minutes
@@ -110,7 +110,7 @@ async function toRewriteData(bank){
     bankUrl = RATE_URL_MONOBANK;
   }
 
-  return axios.get(bankUrl).then(function (response) {
+  return await axios.get(bankUrl).then(function (response) {
     //data from bank
     let data = response.data[0];
     //time now

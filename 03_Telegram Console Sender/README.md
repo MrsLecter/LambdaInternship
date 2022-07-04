@@ -1,6 +1,6 @@
 # Telegram bot(heroku delpoy)
 
-<p>you can find it on telegram: @sendmeinfo01_bot</p>
+<p>you can find it on telegram: @sendMessageByFriendBot</p>
 
 ## How to use
 <p><code>npm install</code></p>

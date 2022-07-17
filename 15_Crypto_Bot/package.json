@@ -1,0 +1,18 @@
+{
+  "name": "15_crypto_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.1",
+    "mysql2": "^2.3.3",
+    "node-telegram-bot-api": "^0.58.0"
+  }
+}

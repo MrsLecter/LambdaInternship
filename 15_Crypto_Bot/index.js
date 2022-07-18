@@ -70,7 +70,7 @@ const start = () => {
   //connect to API and show currecny list with prices in a 30 minute period
   bot.onText(/\/listRecent/, async(msg) => {
     axios
-      .get(`http://${process.env.API_HOST}:${process.env.API_PORT}/period/30`)
+      .get(`http://${process.env.API_HOST}/period/30`)
       .then(function (response) {
         if (response.data == "") {
 
@@ -136,7 +136,7 @@ const start = () => {
     const data = msg.data.split(" ");
     const chatId = msg.message.chat.id;
     axios
-      .get(`http://${process.env.API_HOST}:${process.env.API_PORT}/currencies/${data[1]}/${data[0]}`)
+      .get(`http://${process.env.API_HOST}/currencies/${data[1]}/${data[0]}`)
       .then(function (response) {
         let obj = response.data;
         let currency = Object.keys(obj)[0];

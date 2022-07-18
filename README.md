@@ -184,4 +184,50 @@ Description
 </p>
 </details>
 
+<details><summary>14_Crypto_API</summary>
+<p>
+
+#### [*Watch code*](https://github.com/MrsLecter/internship/tree/typescript/14_Crypto_API)
+
+```
+Description
+
+- Heroku link https://crypto098-api.herokuapp.com/
+- Once every five minutes it polls the crypto-exchanges(CoinMarketCap, CoinBase, CoinStats, Kucoin, CoinPaprika),
+reads the average value of exchange rates for all exchanges and enters it into the database.
+ - Available endpoints:
+   [...]/period/:period - for what period to return the data of all crypt</p>
+   [...]/currencies/:currency- will return the data for a specific crypto</p>
+   [...]/currencies/:currency/:period - will return the data for a specific crypto with the period</p>
+   [...]/markets/:market - will return the data for a specific marketplace</p>
+   
+
+ ```
+</p>
+</details>
+
+
+<details><summary>15_Crypto_Bot</summary>
+<p>
+
+#### [*Watch code*](https://github.com/MrsLecter/internship/tree/main/15_Crypto_Bot)
+
+```
+Description
+
+- Heroku link https://crypto098-bot.herokuapp.com/
+- Telegram bot helps to monitor the rate of cryptocurrency.
+- Available endpoints
+  /start - return greeting message
+  /help - return greeting message
+  /listRecent - return greeting message returns /[currency] $[price]
+  /[currency] - get currency info (menu becomes available 
+  (30 min, 1h, 3h, 6h, 12h, 24h) - for which period to derive the average value of the price
+  addToFavourite_[currency] - add to favourite
+  /listFavourite - show favourite currencies
+  /deleteFavourite_[currency] - delete from favourite list
+
+ ```
+</p>
+</details>
 

@@ -1,8 +1,10 @@
 import inquirer from "inquirer";
-import * as access from "./src/dataAccess.js";
-import * as utils from "./src/utils.js";
+import * as access from "./utils/dataAccess.js";
+import * as utils from "./utils/utils.js";
 
-let currentRecord = [];
+interface Answers extends Record<string, any> {}
+
+let currentRecord: Answers[] = [];
 
 const questions = [
   {
@@ -15,7 +17,7 @@ const questions = [
     name: "gender",
     message: "Choose your gender: ",
     choices: ["male", "feemale"],
-    when(answers) {
+    when(answers: Answers) {
       return answers.name;
     },
   },
@@ -23,10 +25,10 @@ const questions = [
     type: "input",
     name: "age",
     message: "Enter your age: ",
-    when(answers) {
+    when(answers: Answers) {
       return answers.name;
     },
-    validate(value) {
+    validate(value: string) {
       const pass = value.match(/^(1[89]|[2-9]\d)$/s);
       if (pass) {
         return true;
@@ -39,7 +41,7 @@ const questions = [
     type: "confirm",
     name: "findondb",
     message: "Do you want to find a user by name in the database?",
-    when(answers) {
+    when(answers: Answers) {
       return !answers.name;
     },
   },
@@ -47,7 +49,7 @@ const questions = [
     type: "input",
     name: "username",
     message: "Enter users name to find in database: ",
-    when(answers) {
+    when(answers: Answers) {
       return !answers.name && answers.findondb;
     },
   },
@@ -56,7 +58,6 @@ const questions = [
 function ask() {
   inquirer.prompt(questions).then((answers) => {
     currentRecord.push(answers);
-    console.log("current record: ", currentRecord);
     if (answers.findondb) {
       console.log("Your database: " + access.readFile() + "\n");
       console.log(utils.findPerson(answers.username));

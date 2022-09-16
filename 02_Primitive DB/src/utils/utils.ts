@@ -1,6 +1,8 @@
 import { readFile, writeData } from "./dataAccess.js";
 
-export const checkData = (person) => {
+interface Answers extends Record<string, any> {}
+
+export const checkData = (person: Answers): Boolean => {
   if (
     !person.hasOwnProperty("name") &&
     !person.hasOwnProperty("age") &&
@@ -11,10 +13,10 @@ export const checkData = (person) => {
   return true;
 };
 
-export const addPerson = (persons) => {
-  let currentPersonsData = JSON.parse(readFile());
+export const addPerson = (persons: Answers[]): void => {
+  let currentPersonsData: Answers[] = JSON.parse(readFile() as string);
   if (persons.length > 0) {
-    persons.forEach((person) => {
+    persons.forEach((person: Answers) => {
       if (checkData(person)) {
         currentPersonsData.push(person);
       }
@@ -23,10 +25,10 @@ export const addPerson = (persons) => {
   }
 };
 
-export const findPerson = (requestedPersonName) => {
-  let requestedPerson = null;
-  const currentPersonsData = JSON.parse(readFile());
-  currentPersonsData.forEach((person) => {
+export const findPerson = (requestedPersonName: string): string => {
+  let requestedPerson = "";
+  const currentPersonsData: Answers[] = JSON.parse(readFile() as string);
+  currentPersonsData.forEach((person: Answers) => {
     if (person["name"].localeCompare(requestedPersonName) === 0) {
       requestedPerson = JSON.stringify(person);
     }

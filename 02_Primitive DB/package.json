@@ -1,15 +1,23 @@
 {
   "name": "02_primitive-db",
   "version": "1.0.0",
-  "description": "",
+  "description": "1) install dependencies: npm install 2) run : npm start",
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js"
+    "build": "tsc",
+    "start": "node ./dist/app.js"
   },
   "dependencies": {
     "inquirer": "^8.2.4"
   },
   "author": "MrsLecter",
-  "license": "ISC"
+  "license": "ISC",
+  "keywords": [
+    "inquirer"
+  ],
+  "devDependencies": {
+    "@types/inquirer": "^9.0.1",
+    "typescript": "^4.8.3"
+  }
 }

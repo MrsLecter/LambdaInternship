@@ -1,13 +1,12 @@
-const token = process.env.BOT_TOKEN;
-const TelegramBot = require('node-telegram-bot-api');
-const ws = new WebSocket('ws://localhost:3000');
+require("dotenv").config();
+const { BOT_TOKEN, CHAT_ID } = process.env;
+const TelegramBot = require("node-telegram-bot-api");
 
-const {CHAT_ID} = require('./constants');
+const ws = new WebSocket("ws://localhost:3000");
+const bot = new TelegramBot(BOT_TOKEN, { polling: true });
 
-const bot = new TelegramBot(token, {polling: true});
+const sendCat = (data) => {
+  bot.sendMessage(CHAT_ID, data);
+};
 
-function toSendCat(data) {
-    bot.sendMessage(CHAT_ID, data);  
-}
-
-ws.onmessage = (response) => toSendCat(response.data)
+ws.onmessage = (response) => sendCat(response.data);

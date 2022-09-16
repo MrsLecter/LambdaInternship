@@ -6,7 +6,7 @@ import { json } from "body-parser";
 
 const app = express();
 const PORT = 3000;
-//use json body parser
+
 app.use(json());
 
 app.use("/custom", customRoutes);

@@ -1,40 +1,37 @@
-import { toReadFile, toWriteData } from "./data_access.js";
+import { readFile, writeData } from "./dataAccess.js";
 
-export function toValidateData(data) {
+export const checkData = (person) => {
   if (
-    data.hasOwnProperty("name") &&
-    data.hasOwnProperty("age") &&
-    data.hasOwnProperty("gender")
+    !person.hasOwnProperty("name") &&
+    !person.hasOwnProperty("age") &&
+    !person.hasOwnProperty("gender")
   ) {
-    return true;
-  } else {
     return false;
   }
-}
+  return true;
+};
 
-export function toAddData(arr) {
-  let currentData = JSON.parse(toReadFile());
-  try {
-    if (arr.length > 0) {
-      arr.forEach((item) => {
-        if (toValidateData(item)) {
-          currentData.push(item);
-        }
-      });
-      toWriteData(JSON.stringify(currentData));
-    }
-  } catch (err) {
-    console.log(err);
+export const addPerson = (persons) => {
+  let currentPersonsData = JSON.parse(readFile());
+  if (persons.length > 0) {
+    persons.forEach((person) => {
+      if (checkData(person)) {
+        currentPersonsData.push(person);
+      }
+    });
+    writeData(JSON.stringify(currentPersonsData));
   }
-}
+};
 
-export function toFindPerson(name) {
-  let person = null;
-  const data = JSON.parse(toReadFile());
-  data.forEach((object) => {
-    if (object["name"].localeCompare(name) === 0) {
-      person = JSON.stringify(object);
+export const findPerson = (requestedPersonName) => {
+  let requestedPerson = null;
+  const currentPersonsData = JSON.parse(readFile());
+  currentPersonsData.forEach((person) => {
+    if (person["name"].localeCompare(requestedPersonName) === 0) {
+      requestedPerson = JSON.stringify(person);
     }
   });
-  return person == undefined ? `Person with name [${name}] not found!` : person;
-}
+  return requestedPerson === undefined
+    ? `Person with name [${requestedPersonName}] not found!`
+    : requestedPerson;
+};

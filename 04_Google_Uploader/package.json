@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node app"
   },
-  "author": "",
+  "author": "MrsLecter",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.0.1",

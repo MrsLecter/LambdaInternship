@@ -1,4 +1,4 @@
-function getCurrencyList(arr) {
+const getCurrencyList = (arr) => {
   if (arr.length === 0) {
     return ["Nothing"];
   }
@@ -7,10 +7,9 @@ function getCurrencyList(arr) {
     currency.push(obj["currency"]);
   });
   return currency;
-}
+};
 
-
-function getStrinFromList(list) {
+const getStrinFromList = (list) => {
   if (list[0].localeCompare("Nothing") === 0) {
     return "Your favourite list is empty!";
   }
@@ -19,7 +18,6 @@ function getStrinFromList(list) {
     str += "\n/" + item;
   });
   return str;
-}
-
+};
 
 module.exports = { getCurrencyList, getStrinFromList };

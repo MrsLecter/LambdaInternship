@@ -4,30 +4,31 @@ const {
   toConvertIPtoNumber,
   getDataTable,
 } = require("./src/utils");
-const {TABLE_PATH} = require("./src/constants");
+const { TABLE_PATH } = require("./src/constants");
 
 const app = express();
 
-app.get("/", function (request, response) {
+app.get("/", function (_, response) {
   response.send(
-    "<h2>to find out your location by ip go to [<a href='/whereiam'>/whereiam </a>]</h2>"
+    "<h2>to find out your location by ip go to [<a href='/whereiam'>/whereiam </a>]</h2>",
   );
 });
 
 app.get("/whereiam", function (request, response) {
-  //extract user ip
-  let user_ip = request.headers["x-forwarded-for"];
-  //download data
+  let userIp = request.headers["x-forwarded-for"];
   let dataTable = getDataTable(TABLE_PATH);
-  //formatted ip
-  let decimalFormIp = toConvertIPtoNumber(user_ip);
+  let decimalFormIp = toConvertIPtoNumber(userIp);
   let location = toReturnLocationByIp(decimalFormIp, dataTable);
   response.json({
-    your_ip: user_ip,
-    your_ip_in_number: decimalFormIp,
-    user_country: location[2],
-    country_ip_range: {"from": location[0], "to": location[1]},
+    yourIp: userIp,
+    yourIpInNumber: decimalFormIp,
+    userCountry: location[2],
+    countryIpRange: { from: location[0], to: location[1] },
   });
 });
 
 app.listen(3000);
+
+console.log(
+  "Server running on http://127.0.0.1:3000/. Run ngrok: ngrok http 3000 ",
+);

@@ -6,6 +6,6 @@
   "scripts": {
     "start": "node sort_reduce"
   },
-  "author": "",
+  "author": "MrsLecter",
   "license": "ISC"
 }

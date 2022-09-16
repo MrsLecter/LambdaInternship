@@ -18,7 +18,7 @@ const URL = [
   "https://jsonbase.com/lambdajson_type4/706",
   "https://jsonbase.com/lambdajson_type4/521",
   "https://jsonbase.com/lambdajson_type4/350",
-  "https://jsonbase.com/lambdajson_type4/64",
+  "https://jsonbase.com/lambdajson_type4/640",
 ];
 
-module.exports = {URL};
+module.exports = { URL };

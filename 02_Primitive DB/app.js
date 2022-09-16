@@ -1,8 +1,8 @@
 import inquirer from "inquirer";
-import * as access from "./src/data_access.js";
+import * as access from "./src/dataAccess.js";
 import * as utils from "./src/utils.js";
 
-let data = [];
+let currentRecord = [];
 
 const questions = [
   {
@@ -55,16 +55,17 @@ const questions = [
 
 function ask() {
   inquirer.prompt(questions).then((answers) => {
-    data.push(answers);
-    
+    currentRecord.push(answers);
+    console.log("current record: ", currentRecord);
     if (answers.findondb) {
-      console.log("Your database: " + access.toReadFile() + "\n");
-      console.log(utils.toFindPerson(answers.username));
+      console.log("Your database: " + access.readFile() + "\n");
+      console.log(utils.findPerson(answers.username));
     } else if (!answers.findondb && !answers.name) {
-      utils.toAddData(data);
+      utils.addPerson(currentRecord);
       console.log("End");
     } else {
-      utils.toAddData(data);
+      utils.addPerson(currentRecord);
+      currentRecord = [];
       ask();
     }
   });

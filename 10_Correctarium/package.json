@@ -9,7 +9,7 @@
     "build": "tsc ./utils",
     "coverage": "npx jest --coverage"
   },
-  "author": "",
+  "author": "MissisLecter",
   "license": "ISC",
   "dependencies": {
     "@types/express": "^4.17.13",

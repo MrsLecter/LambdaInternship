@@ -8,44 +8,34 @@ const token = process.env.BOT_TOKEN;
 
 const bot = new TelegramBot(token, { polling: true });
 
-//run bot
 const start = () => {
-
   bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
-    const message =
-      "Hello! Write /help to see available command";
+    const message = "Hello! Write /help to see available command";
 
     bot.sendMessage(chatId, message);
   });
 
-
   bot.onText(/\/help/, (msg) => {
-
     bot.sendMessage(
       msg.chat.id,
       "Here is only the current rate of crypto from the most popular exchanges! Here's what I can do:" +
         '\n/listRecent - gives a list of "hype" crypto;' +
-        "\n/listFavourite - returns the selected crypt sheet"
+        "\n/listFavourite - returns the selected crypt sheet",
     );
   });
 
-
-  //show all currency from favourite
   bot.onText(/\/listFavourite/, async (msg) => {
     db.toShowAllFavourite(msg.chat.id)
       .then((favourite) =>
-
         bot.sendMessage(
           msg.chat.id,
-          getStrinFromList(getCurrencyList(favourite[0]))
-        )
+          getStrinFromList(getCurrencyList(favourite[0])),
+        ),
       )
       .catch((err) => console.log(err));
   });
 
-
-  //add curreny to existing database (have hormat /[currency]_$[price])
   bot.onText(/\/addToFavourite_([A-Z]{3,5})/, async (msg, match) => {
     const chatId = msg.chat.id;
     const resp = match[1];
@@ -55,28 +45,25 @@ const start = () => {
       .catch((err) => console.log(err));
   });
 
-  //remove currency from existing database
   bot.onText(/\/removeFromFavourite_([A-Z]{3,5})/, async (msg, match) => {
     const chatId = msg.chat.id;
     const resp = match[1];
 
     db.toDeleteFromFavourites(resp, chatId)
       .then((data) =>
-        bot.sendMessage(msg.chat.id, `${resp} removed from favourite`)
+        bot.sendMessage(msg.chat.id, `${resp} removed from favourite`),
       )
       .catch((err) => console.log(err));
   });
 
-  //connect to API and show currecny list with prices in a 30 minute period
-  bot.onText(/\/listRecent/, async(msg) => {
+  bot.onText(/\/listRecent/, async (msg) => {
     axios
       .get(`http://${process.env.API_HOST}/period/30`)
       .then(function (response) {
-        if (response.data == "") {
-
+        if (response.data === "") {
           bot.sendMessage(
             msg.chat.id,
-            "There are no records for the last 30 minutes. Update the data"
+            "There are no records for the last 30 minutes. Update the data",
           );
         }
         let obj = response.data;
@@ -89,10 +76,10 @@ const start = () => {
             formattedData += `\n/${item}  $${obj[item]}`;
           }
         }
-        
+
         bot.sendMessage(
           msg.chat.id,
-          formattedData === "" ? "Repeat the request later" : formattedData
+          formattedData === "" ? "Repeat the request later" : formattedData,
         );
       })
       .catch(function (error) {
@@ -100,7 +87,6 @@ const start = () => {
       });
   });
 
-  //handle currency name input like 'BTC', 'DOGE', etc.
   bot.onText(/\/[A-Z]{3,5}/, async (msg, match) => {
     const chatId = msg.chat.id;
     const resp = match[1];
@@ -131,7 +117,6 @@ const start = () => {
     });
   });
 
-  //handle callback which shows the average price for the selected period
   bot.on("callback_query", async (msg) => {
     const data = msg.data.split(" ");
     const chatId = msg.message.chat.id;
@@ -144,8 +129,8 @@ const start = () => {
         bot.sendMessage(
           chatId,
           `Currency ${currency} rate for period ${data[0]} ${
-            data[0] == 30 ? "minutes" : "hour(s)"
-          }: $${price}`
+            data[0] === 30 ? "minutes" : "hour(s)"
+          }: $${price}`,
         );
       })
 
@@ -154,7 +139,6 @@ const start = () => {
       });
   });
 
-  //show polling error
   bot.on("polling_error", console.log);
 };
 

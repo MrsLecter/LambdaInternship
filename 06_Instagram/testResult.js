@@ -1,10 +1,10 @@
 const fs = require("fs");
 
-function toTestUnique(filesAmount) {
+const toTestUnique = (filesAmount) => {
   let rezArr = [];
 
   for (let fileNumber = 0; fileNumber < filesAmount; fileNumber++) {
-    let file = fs.readFileSync(
+    const file = fs.readFileSync(
       `./words/out${fileNumber}.txt`,
       "utf8",
       function (err, fileContent) {
@@ -12,52 +12,19 @@ function toTestUnique(filesAmount) {
         return fileContent;
       },
     );
-    let arr = file.split("\n");
+    const arr = file.split("\n");
     rezArr.push(...arr);
   }
-  let set = new Set(rezArr);
+  const set = new Set(rezArr);
   return set.size;
-}
+};
 
-let uniqS = performance.now();
-let uniqRez = toTestUnique(10); //129240 words
-let uniqE = performance.now();
+const uniqS = performance.now();
+const uniqRez = toTestUnique(10); //129240 words
+const uniqE = performance.now();
 console.log("unique time: ", uniqE - uniqS, "words: ", uniqRez);
 
-function toTestIntersection(filesAmount) {
-  let rezArr = [];
-  let setArr = [];
-
-  for (let fileNumber = 0; fileNumber < filesAmount; fileNumber++) {
-    let file = fs.readFileSync(
-      `./words/out${fileNumber}.txt`,
-      "utf8",
-      function (err, fileContent) {
-        if (err) return err;
-        return fileContent;
-      },
-    );
-    let arr = file.split("\n");
-    let set = new Set(arr);
-    setArr.push(set);
-  }
-  let intersect = setsIntersection(...setArr);
-  return intersect.size;
-}
-
-let ints10 = performance.now();
-let intersectFiles10 = toTestIntersection(10); //1764 words
-let inte10 = performance.now();
-
-console.log("time 10 words: ", inte10 - ints10, " words: ", intersectFiles10);
-
-let ints = performance.now();
-let intersectFiles = toTestIntersection(20); //441 words
-let inte = performance.now();
-
-console.log("time 20 words: ", inte - ints, " words: ", intersectFiles);
-
-function setsIntersection(...sets) {
+const setsIntersection = (...sets) => {
   if (sets.length < 1) {
     return new Set();
   }
@@ -82,4 +49,37 @@ function setsIntersection(...sets) {
     }
   }
   return result;
-}
+};
+
+const toTestIntersection = (filesAmount) => {
+  let rezArr = [];
+  let setArr = [];
+
+  for (let fileNumber = 0; fileNumber < filesAmount; fileNumber++) {
+    const file = fs.readFileSync(
+      `./words/out${fileNumber}.txt`,
+      "utf8",
+      function (err, fileContent) {
+        if (err) return err;
+        return fileContent;
+      },
+    );
+    const arr = file.split("\n");
+    const set = new Set(arr);
+    setArr.push(set);
+  }
+  const intersect = setsIntersection(...setArr);
+  return intersect.size;
+};
+
+const ints10 = performance.now();
+const intersectFiles10 = toTestIntersection(10); //1764 words
+const inte10 = performance.now();
+
+console.log("time 10 words: ", inte10 - ints10, " words: ", intersectFiles10);
+
+const ints = performance.now();
+const intersectFiles = toTestIntersection(20); //441 words
+const inte = performance.now();
+
+console.log("time 20 words: ", inte - ints, " words: ", intersectFiles);

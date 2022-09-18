@@ -3,30 +3,31 @@ const fs = require("fs");
 
 const ALL_FILES_AMOUNT = 20;
 
-const getAllFiles = (filesAmount = 1) => {
-  let allFiles = [];
-  for (let file_number = 0; file_number < filesAmount; file_number++) {
-    let file = fs.readFileSync(
-      `./words/out${file_number}.txt`,
-      "utf8",
-      function (err, file_content) {
-        if (err) return err;
-        return file_content;
-      },
-    );
+const getAllFiles = (filesAmount = 1): string[] => {
+  let allFiles = [] as string[];
+  try {
+    for (let file_number = 0; file_number < filesAmount; file_number++) {
+      const file = fs.readFileSync(`./words/out${file_number}.txt`, "utf8");
 
-    allFiles.push(file.split("\n"));
+      allFiles.push(file.split("\n"));
+    }
+    return allFiles;
+  } catch (err) {
+    throw Error((err as Error).message);
   }
-  return allFiles;
 };
 
-const getUniqueValues = (filesData) => {
-  let hTable = {};
+const getUniqueValues = (filesData: string[]): string => {
+  type uniqueTable = {
+    [index: number]: string;
+  };
+
+  let hTable = {} as uniqueTable;
 
   for (let file of filesData) {
     for (let word of file) {
-      let hash = crc32.str(word);
-      let index = Math.abs(hash);
+      const hash = crc32.str(word);
+      const index = Math.abs(hash);
       hTable[index] = word;
     }
   }
@@ -34,9 +35,13 @@ const getUniqueValues = (filesData) => {
   return `Unique word combinations: ${hTableLength} in ${filesData.length} files`;
 };
 
-const getIntersection = (filesData) => {
-  let hTable = {};
-  let filesAmount = filesData.length;
+const getIntersection = (filesData: string[]): string => {
+  type intersectionTable = {
+    [index: number]: [number[], string];
+  };
+
+  let hTable = {} as intersectionTable;
+  const filesAmount = filesData.length;
   let rezArr = [];
   let fileIndex = 0;
 
@@ -50,7 +55,7 @@ const getIntersection = (filesData) => {
           hTable[index][0].push(fileIndex);
         }
       } else {
-        hTable[index] = [];
+        hTable[index] = [[], ""];
         hTable[index][0] = [fileIndex];
         hTable[index][1] = word;
       }
@@ -77,18 +82,18 @@ const getIntersection = (filesData) => {
 
 const allFilesData = getAllFiles(20);
 
-let startUnic = performance.now();
-let unicWords = getUniqueValues(allFilesData);
-let finishUnic = performance.now();
+const startUnic = performance.now();
+const unicWords = getUniqueValues(allFilesData);
+const finishUnic = performance.now();
 console.log(unicWords); //20 files ==> 129233
 console.log("time: " + (finishUnic - startUnic) + " msec ");
 //from 870.4358449988067 msec
 
 const allFilesData10 = getAllFiles(10);
 
-let intersectoinStart10 = performance.now();
-let iintWords10 = getIntersection(allFilesData10);
-let intersectoinFinish10 = performance.now();
+const intersectoinStart10 = performance.now();
+const iintWords10 = getIntersection(allFilesData10);
+const intersectoinFinish10 = performance.now();
 console.log(iintWords10); //10 files ==> 1764;
 console.log("time: ", intersectoinFinish10 - intersectoinStart10, " msec ");
 

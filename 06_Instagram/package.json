@@ -4,12 +4,17 @@
   "description": "1) install dependencies: npm install 2) run : npm start 3) use another approach to test results: node testResult.js",
   "main": "test.js",
   "scripts": {
-    "start": "node hashTable"
+    "build": "tsc",
+    "start": "node ./dist/hashTable",
+    "test": "node testResult"
   },
   "author": "MrsLecter",
   "license": "ISC",
   "keywords": [],
   "dependencies": {
     "crc-32": "^1.2.2"
+  },
+  "devDependencies": {
+    "typescript": "^4.8.3"
   }
 }

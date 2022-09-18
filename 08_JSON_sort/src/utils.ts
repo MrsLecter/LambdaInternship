@@ -1,10 +1,12 @@
+import { AxiosResponse } from "axios";
+
 const axios = require("axios").default;
 
-const getPropValue = (responseObj) => {
+const getPropValue = (responseObj: Object): string => {
   const stringifyData = JSON.stringify(responseObj);
   const result = stringifyData.match(/["]+isDone+[":]+[a-z]{4,5}/);
 
-  if (result[0] !== null) {
+  if (result !== null) {
     const value = result[0].substring(9);
     return value[0].toUpperCase() + value.substring(1);
   } else {
@@ -12,15 +14,17 @@ const getPropValue = (responseObj) => {
   }
 };
 
-const getFormattedResponse = async (response) => {
+const getFormattedResponse = async (
+  response: AxiosResponse,
+): Promise<string> => {
   const isDone = getPropValue(await response.data);
   return `${response.config.url}: isDone - ${isDone}`;
 };
 
-function getPropValueReсursive(responseObj) {
-  let props = Object.keys(responseObj);
+const getPropValueReсursive = (responseObj: any): string | void => {
+  const props = Object.keys(responseObj);
   if (props.includes("isDone")) {
-    return responseObj["isDone"];
+    return responseObj.isDone;
   }
   for (const prop of props) {
     if (
@@ -30,6 +34,6 @@ function getPropValueReсursive(responseObj) {
       return getPropValueReсursive(responseObj[prop]);
     }
   }
-}
+};
 
 module.exports = { getPropValue, getFormattedResponse };

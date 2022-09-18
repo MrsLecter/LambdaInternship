@@ -20,5 +20,4 @@ const URL = [
   "https://jsonbase.com/lambdajson_type4/350",
   "https://jsonbase.com/lambdajson_type4/640",
 ];
-
 module.exports = { URL };

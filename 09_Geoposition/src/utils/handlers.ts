@@ -1,4 +1,7 @@
-const toReturnLocationByIp = (userIp, ipTable) => {
+export const toReturnLocationByIp = (
+  userIp: number,
+  ipTable: number[][],
+): number[] => {
   let start = 0;
   let end = ipTable.length - 1;
   while (start <= end) {
@@ -8,31 +11,29 @@ const toReturnLocationByIp = (userIp, ipTable) => {
     else if (ipTable[mid][0] < userIp) start = mid + 1;
     else end = mid - 1;
   }
-  return false;
+  return [];
 };
 
-const toConvertIPtoNumber = (ip) => {
+export const toConvertIPtoNumber = (ip: string): number => {
   const { NORMAL_POWER } = require("./constants");
   let arr = ip.split(".");
   let number =
-    arr[0] * NORMAL_POWER ** 3 +
-    arr[1] * NORMAL_POWER ** 2 +
-    arr[2] * NORMAL_POWER +
-    arr[3] * 1;
+    parseInt(arr[0]) * NORMAL_POWER ** 3 +
+    parseInt(arr[1]) * NORMAL_POWER ** 2 +
+    parseInt(arr[2]) * NORMAL_POWER +
+    parseInt(arr[3]) * 1;
   return number;
 };
 
-const getDataTable = (tablePath) => {
+export const getDataTable = (tablePath: string): number[][] => {
   const fs = require("fs");
   const data = fs.readFileSync(tablePath, { encoding: "utf8", flag: "r" });
   const arrData = data
     .replaceAll('"', "")
     .split("\r\n")
-    .map((item) => {
+    .map((item: string) => {
       let row = item.split(",");
       return [parseInt(row[0]), parseInt(row[1]), row[3]];
     });
   return arrData;
 };
-
-module.exports = { toReturnLocationByIp, toConvertIPtoNumber, getDataTable };

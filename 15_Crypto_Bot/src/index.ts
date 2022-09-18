@@ -1,8 +1,12 @@
 require("dotenv").config();
-const axios = require("axios");
-const db = require("./utils/dbFunctions");
-const { getCurrencyList, getStrinFromList } = require("./utils/utils");
-const TelegramBot = require("node-telegram-bot-api");
+import TelegramBot from "node-telegram-bot-api";
+import axios from "axios";
+import {
+  addToFavourite,
+  deleteFromFavourites,
+  showAllFavourite,
+} from "./utils/dbFunctions";
+import { getCurrencyList, getStrinFromList } from "./utils/utils";
 
 const token = process.env.BOT_TOKEN;
 
@@ -26,7 +30,7 @@ const start = () => {
   });
 
   bot.onText(/\/listFavourite/, async (msg) => {
-    db.toShowAllFavourite(msg.chat.id)
+    showAllFavourite(msg.chat.id)
       .then((favourite) =>
         bot.sendMessage(
           msg.chat.id,
@@ -40,7 +44,7 @@ const start = () => {
     const chatId = msg.chat.id;
     const resp = match[1];
 
-    db.toAddToFavourite(resp, chatId)
+    addToFavourite(resp, chatId)
       .then((data) => bot.sendMessage(chatId, `${resp} added to favourite`))
       .catch((err) => console.log(err));
   });
@@ -49,7 +53,7 @@ const start = () => {
     const chatId = msg.chat.id;
     const resp = match[1];
 
-    db.toDeleteFromFavourites(resp, chatId)
+    deleteFromFavourites(resp, chatId)
       .then((data) =>
         bot.sendMessage(msg.chat.id, `${resp} removed from favourite`),
       )
@@ -92,7 +96,7 @@ const start = () => {
     const resp = match[1];
     const currentCyrrency = match[0].slice(1);
 
-    db.toShowAllFavourite(chatId).then((favourite) => {
+    showAllFavourite(chatId).then((favourite) => {
       const currencyList = getCurrencyList(favourite[0]);
       if (currencyList.includes(currentCyrrency)) {
         bot.sendMessage(chatId, "/removeFromFavourite_" + currentCyrrency);

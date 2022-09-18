@@ -4,8 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node sort_reduce"
+    "build": "tsc",
+    "start": "node ./dist/sortCycle",
+    "test": "node ./dist/sortReduce"
   },
   "author": "MrsLecter",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.8.3"
+  }
 }

@@ -1,1 +1,1 @@
-{"bank":"privat","buy":"39.50000","sale":"39.90000","recordTime":1663171461844}
+{"bank":"privat","buy":"39.50000","sale":"39.90000","recordTime":1663504923720}

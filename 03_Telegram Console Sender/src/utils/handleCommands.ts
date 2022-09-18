@@ -1,15 +1,14 @@
-const TelegramBot = require("node-telegram-bot-api");
-const axios = require("axios");
-const { IMAGE_URL, STICKER_URL, BOT_TOKEN } = process.env;
-const { API_WEATHER } = require("./constants");
+import TelegramBot = require("node-telegram-bot-api");
+import axios, { AxiosResponse } from "axios";
+import { API_WEATHER } from "./constants";
 const {
   getFormattedData,
   checkOldData,
   rewriteData,
   readData,
-} = require("./utils");
-
-const bot = new TelegramBot(BOT_TOKEN, { polling: true });
+} = require("./handlers");
+import { bankResponse } from "./types";
+const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 
 const handleCommands = () => {
   bot.setMyCommands([
@@ -23,8 +22,8 @@ const handleCommands = () => {
     bot.sendMessage(msg.chat.id, "Welcome !", {
       reply_markup: {
         keyboard: [
-          ["photo", "/info"],
-          ["/currency", "/weather_forecast"],
+          [{ text: "photo" }, { text: "/info" }],
+          [{ text: "/currency" }, { text: "/weather_forecast" }],
         ],
       },
     });
@@ -35,19 +34,19 @@ const handleCommands = () => {
       msg.chat.id,
       "Hi. You can use me! I can store notes, show you the exchange rate, show you the weather",
     );
-    await bot.sendSticker(msg.chat.id, STICKER_URL);
+    await bot.sendSticker(msg.chat.id, process.env.STICKER_URL);
   });
 
   bot.onText(/\/currency/, (msg) => {
     bot.sendMessage(msg.chat.id, "Currency exchange rate. Select bank:", {
-      reply_markup: JSON.stringify({
+      reply_markup: {
         inline_keyboard: [
           [
             { text: "dollar rate(Privatbank)", callback_data: "privat" },
             { text: "USD rate(Monobank)", callback_data: "monobank" },
           ],
         ],
-      }),
+      },
     });
   });
 
@@ -56,35 +55,34 @@ const handleCommands = () => {
       msg.chat.id,
       "Forecast for Odessa(Ukraine). Select interval:",
       {
-        reply_markup: JSON.stringify({
+        reply_markup: {
           inline_keyboard: [
             [
               { text: "at intervals of 3 hours", callback_data: "3" },
               { text: "at intervals of 6 hours", callback_data: "6" },
             ],
           ],
-        }),
+        },
       },
     );
   });
 
-  bot.on("callback_query", async (msg) => {
-    const data = msg.data;
-    const chatId = msg.message.chat.id;
-    if (data.length === 1) {
+  bot.on("callback_query", async (msg: TelegramBot.CallbackQuery) => {
+    const data = msg.data || "";
+    const chatId = msg.message?.chat.id || 0;
+    if (data?.length === 1) {
       console.log("url", API_WEATHER);
-      await axios
-        .get(API_WEATHER)
-        .then(function (response) {
-          let dataResponse = response.data.list;
+      try {
+        await axios.get(API_WEATHER).then((response: AxiosResponse) => {
+          let dataResponse: Object[] = response.data.list;
           bot.sendMessage(chatId, getFormattedData(dataResponse, +data));
-        })
-        .catch(function (error) {
-          console.log(error);
         });
+      } catch (error) {
+        throw Error((error as Error).message);
+      }
     } else if (data.length > 1) {
       if (checkOldData(data)) {
-        rewriteData(data).then((parsedData) => {
+        rewriteData(data).then((parsedData: bankResponse) => {
           const date = new Date(parsedData.recordTime);
           let formatTime =
             String(
@@ -107,7 +105,7 @@ const handleCommands = () => {
           }
         });
       } else {
-        let parsedData = readData(data);
+        const parsedData = readData(data);
         const date = new Date(parsedData.recordTime);
         let formatTime =
           String(
@@ -132,10 +130,10 @@ const handleCommands = () => {
     }
   });
 
-  bot.on("message", async (msg) => {
-    if (msg.text.toString().toLowerCase().indexOf("photo") === 0) {
+  bot.on("message", async (msg: TelegramBot.Message) => {
+    if (msg.text?.toString().toLowerCase().indexOf("photo") === 0) {
       await axios
-        .get(IMAGE_URL)
+        .get(process.env.IMAGE_URL)
         .then(function (response) {
           bot.sendPhoto(msg.chat.id, response.request.res.responseUrl);
         })
@@ -143,20 +141,20 @@ const handleCommands = () => {
           console.log(error);
         });
       console.log(
-        `The user ${msg.from.first_name} ${
-          typeof msg.from.last_name === "undefined" ? "" : msg.from.last_name
+        `The user ${msg.from?.first_name} ${
+          typeof msg.from?.last_name === "undefined" ? "" : msg.from.last_name
         } requested a picture`,
       );
     } else {
       await bot.sendMessage(
         msg.chat.id,
-        `The user ${msg.from.first_name} ${
-          typeof msg.from.last_name === "undefined" ? "" : msg.from.last_name
+        `The user ${msg.from?.first_name} ${
+          typeof msg.from?.last_name === "undefined" ? "" : msg.from.last_name
         }wrote: ${msg.text}`,
       );
       console.log(
-        `The user ${msg.from.first_name} ${
-          typeof msg.from.last_name === "undefined" ? "" : msg.from.last_name
+        `The user ${msg.from?.first_name} ${
+          typeof msg.from?.last_name === "undefined" ? "" : msg.from.last_name
         }wrote: ${msg.text}`,
       );
     }

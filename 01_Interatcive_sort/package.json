@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "interactive sort task",
   "main": "app.js",
-  "type": "module",
   "scripts": {
-    "start": "node app.js"
+    "build": "tsc",
+    "start": "node ./dist/app.js"
   },
   "author": "MrsLecter",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.8.3"
+  }
 }

@@ -1,12 +1,14 @@
-const axios = require("axios");
-const fs = require("fs");
-const { DAYS, MONTHS, MAX_HOUR_VALUE } = require("./constants.js");
+import axios from "axios";
+import fs from "fs";
+import { DAYS, MONTHS, MAX_HOUR_VALUE } from "./constants.js";
 const { RATE_URL_MONOBANK, STORAGE_MONOBANK, RATE_URL_PRIVAT, STORAGE_PRIVAT } =
   process.env;
 
-const getFormattedData = (data, hourInterval = 3) => {
+import { fileContent, bankResponse, apiWeatherData } from "./types";
+
+const getFormattedData = (data: apiWeatherData[], hourInterval = 3): string => {
   let formatted = "";
-  let tempDay = 0;
+  // let tempDay = 0;
   let tempHour = 0;
 
   let dateCommon;
@@ -32,14 +34,10 @@ const getFormattedData = (data, hourInterval = 3) => {
     currentTemp = Math.round(data[i].main.temp);
     feelsTemp = Math.round(data[i].main.feels_like);
     weatherDescription = data[i].weather[0].description;
-    if (tempDay !== dateInWeek) {
-      formatted += `\n${dateInWeek}, ${dayInMonth} ${month}:`;
-      tempDay = dateInWeek;
-    }
 
     if (i !== 0) {
-      let diff = Math.abs(hours - tempHour);
-      let interv = diff > hourInterval ? MAX_HOUR_VALUE - diff : diff;
+      const diff = Math.abs(hours - tempHour);
+      const interv = diff > hourInterval ? MAX_HOUR_VALUE - diff : diff;
       if (interv === hourInterval) {
         tempHour = hours;
         formatted += `\n   ${hours}:${minutes}0, ${
@@ -60,49 +58,49 @@ const getFormattedData = (data, hourInterval = 3) => {
   return formatted;
 };
 
-const readData = (bank) => {
-  let fileRoute;
+const readData = (bank: string): fileContent => {
+  let fileRoute = "";
 
   if (bank.localeCompare("privat") === 0) {
-    fileRoute = STORAGE_PRIVAT;
+    fileRoute += STORAGE_PRIVAT;
   } else if (bank.localeCompare("monobank") === 0) {
-    fileRoute = STORAGE_MONOBANK;
+    fileRoute += STORAGE_MONOBANK;
   }
 
-  let fileData = fs.readFileSync(fileRoute, "utf8", function (error) {
-    if (error) console.log(error);
-  });
-  let parsedData = JSON.parse(fileData);
+  const fileData = fs.readFileSync(fileRoute, "utf8");
+  const parsedData = JSON.parse(fileData);
   return parsedData;
 };
 
-const checkOldData = (bank) => {
-  let parsedData = readData(bank);
-  let timeGap = (new Date().getTime() - parsedData.recordTime) / 60000;
+const checkOldData = (bank: string): Boolean => {
+  const { recordTime } = readData(bank);
+  const timeGap = (new Date().getTime() - recordTime) / 60000;
   if (timeGap <= 2) {
     return false;
   }
   return true;
 };
 
-const rewriteData = async (bank) => {
-  let fileRoute;
-  let bankUrl;
+const rewriteData = async (
+  bank: "privat" | "monobank",
+): Promise<bankResponse> => {
+  let fileRoute: string;
+  let bankUrl: string = "";
 
   if (bank.localeCompare("privat") === 0) {
     fileRoute = STORAGE_PRIVAT;
-    bankUrl = RATE_URL_PRIVAT;
+    bankUrl += RATE_URL_PRIVAT;
   } else if (bank.localeCompare("monobank") === 0) {
     fileRoute = STORAGE_MONOBANK;
-    bankUrl = RATE_URL_MONOBANK;
+    bankUrl += RATE_URL_MONOBANK;
   }
 
   return await axios
     .get(bankUrl)
-    .then(function (response) {
-      let { buy, sale, rateBuy, rateSell } = response.data[0];
-      let newDate = new Date();
-      let obj;
+    .then((response) => {
+      const { buy, sale, rateBuy, rateSell } = response.data[0];
+      const newDate = new Date();
+      let obj = {} as bankResponse;
 
       if (bank.localeCompare("privat") === 0) {
         obj = {
@@ -120,13 +118,13 @@ const rewriteData = async (bank) => {
         };
       }
 
-      fs.writeFile(fileRoute, JSON.stringify(obj), function (error) {
-        if (error) console.log(error);
+      fs.writeFile(fileRoute, JSON.stringify(obj), (err) => {
+        if (err) throw Error((err as Error).message);
       });
       return obj;
     })
-    .catch(function (error) {
-      console.log(error);
+    .catch((err) => {
+      throw Error((err as Error).message);
     });
 };
 

@@ -1,1 +1,1 @@
-{"bank":"monobank","buy":36.65,"sale":37.4995,"recordTime":1663171463518}
+{"bank":"monobank","buy":36.65,"sale":37.4995,"recordTime":1663504925222}

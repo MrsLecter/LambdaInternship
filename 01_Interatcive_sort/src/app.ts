@@ -1,8 +1,8 @@
-import * as say from "./constants.js";
-import * as func from "./functions.js";
+import * as say from "./utils/constants";
+import * as func from "./utils/functions";
 
-let currentData;
-let data;
+let currentData: string;
+let data: string[];
 
 process.stdout.write(say.HELLO);
 
@@ -55,3 +55,5 @@ process.stdin.on("readable", () => {
 process.on("exit", function () {
   process.stdout.write(say.BYE);
 });
+
+exports = {};

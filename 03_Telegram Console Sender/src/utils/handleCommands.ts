@@ -1,13 +1,14 @@
 import TelegramBot = require("node-telegram-bot-api");
 import axios, { AxiosResponse } from "axios";
 import { API_WEATHER } from "./constants";
+import { bankResponse } from "./types";
 const {
   getFormattedData,
   checkOldData,
   rewriteData,
   readData,
 } = require("./handlers");
-import { bankResponse } from "./types";
+
 const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 
 const handleCommands = () => {

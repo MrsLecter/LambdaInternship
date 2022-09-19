@@ -8,7 +8,6 @@ import { fileContent, bankResponse, apiWeatherData } from "./types";
 
 const getFormattedData = (data: apiWeatherData[], hourInterval = 3): string => {
   let formatted = "";
-  // let tempDay = 0;
   let tempHour = 0;
 
   let dateCommon;

@@ -1,5 +1,5 @@
-const { Router } = require("express");
-const {startPage, getDataForCertainPeriod, getDataForCertainCurrency, getDataForCertainMarket} = require('../controllers/mainControllers');
+import { Router } from "express";
+import {startPage, getDataForCertainPeriod, getDataForCertainCurrency, getDataForCertainMarket} from '../controllers/mainControllers';
 
 const router = Router();
 
@@ -17,4 +17,4 @@ router.get("/currencies/:currency/:period", getDataForCertainCurrency);
 //will return the data for a specific marketplace
 router.get("/markets/:market", getDataForCertainMarket);
 
-module.exports = router;
+export default router;

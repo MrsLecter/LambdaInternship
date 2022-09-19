@@ -1,9 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.FIVE_MINUTES = 5;
-exports.ONE_HOUR = 60;
-exports.TWENTY_FOUR_HOURS = 24 * 60;
-exports.POPULAR_CURRENCY = [
+export const FIVE_MINUTES = 5;
+
+export const ONE_HOUR = 60;
+export const TWENTY_FOUR_HOURS = 24 * 60;
+
+export const POPULAR_CURRENCY = [
     "BTC",
     "ETH",
     "USDT",
@@ -26,10 +26,11 @@ exports.POPULAR_CURRENCY = [
     "XLM",
     "NEAR"
 ];
-exports.admissibleMarkets = [
+
+export const admissibleMarkets = [
     "coinbase",
     "coinmarket",
     "coinpaprika",
     "coinstats",
     "kucoin",
-];
+  ];

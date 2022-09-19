@@ -6,7 +6,7 @@ const promise_list = POPULAR_CURRENCY.map((currency) => {
     let response;
     try {
       response = await axios.get(
-        `https://api.coinbase.com/v2/exchange-rates?currency=${currency}`
+        `https://api.coinbase.com/v2/exchange-rates?currency=${currency}`,
       );
       let filtered = { [currency]: (+response.data.data.rates.USD).toFixed(5) };
       resolve(filtered);

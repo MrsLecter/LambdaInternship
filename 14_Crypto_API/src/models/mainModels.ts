@@ -15,7 +15,7 @@ export const getCurrentMarket = (market: string): string | object => {
 
 export const getCurrentCurrency = (
   currency: string,
-  period: number = 30
+  period: number = 30,
 ): object => {
   const periodAccepted = period === 30 ? 30 : period * ONE_HOUR;
   let date = new Date();
@@ -24,7 +24,7 @@ export const getCurrentCurrency = (
     `SELECT ${currency} FROM currency WHERE timestamp > '${date
       .toJSON()
       .slice(0, 19)
-      .replace("T", " ")}';`
+      .replace("T", " ")}';`,
   );
 };
 
@@ -36,6 +36,6 @@ export const getAllFromPeriod = (period: number = 30): object => {
     `SELECT * FROM currency WHERE timestamp > '${date
       .toJSON()
       .slice(0, 19)
-      .replace("T", " ")}';`
+      .replace("T", " ")}';`,
   );
 };

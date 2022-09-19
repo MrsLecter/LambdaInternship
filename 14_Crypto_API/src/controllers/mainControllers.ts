@@ -1,6 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
 
-
 const {
   getCurrentMarket,
   getCurrentCurrency,
@@ -11,7 +10,7 @@ const { getAverage } = require("../utils/utils");
 export const startPage = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   res.status(200).json({ message: "Home page" });
 };
@@ -19,7 +18,7 @@ export const startPage = (
 export const getDataForCertainPeriod = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   getAllFromPeriod(req.params["period"])
     //notify the user that there are no entries (no entries in the last 30 minutes)
@@ -29,8 +28,8 @@ export const getDataForCertainPeriod = (
         .json(
           Object.keys(data[0]).length === 0
             ? { message: "No data for current period" }
-            : getAverage(data[0])
-        )
+            : getAverage(data[0]),
+        ),
     )
     .catch((err: string) => {
       throw new Error(err);
@@ -40,20 +39,19 @@ export const getDataForCertainPeriod = (
 export const getDataForCertainCurrency = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   getCurrentCurrency(req.params["currency"], req.params["period"])
-    //notify the user that there are no entries (no entries in the last 30 minutes)
     .then((data: object[]) =>
       res
         .status(200)
         .json(
           Object.keys(data[0]).length === 0
             ? { message: "No data for current period" }
-            : getAverage(data[0])
-        )
+            : getAverage(data[0]),
+        ),
     )
-    .catch((err:string) => {
+    .catch((err: string) => {
       throw new Error(err);
     });
 };
@@ -61,7 +59,7 @@ export const getDataForCertainCurrency = (
 export const getDataForCertainMarket = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   res.status(200).json(await getCurrentMarket(req.params["market"]));
 };

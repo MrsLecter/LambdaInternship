@@ -10,11 +10,11 @@
   5) If you want to see all your shortened link go to <code>/shorted/all</code> with accesstoken and email
   
 ### Endpoints
-- **GET**  <code>http://localhost:3000/</code> - home page;
-- **POST**  <code>http://localhost:3000/</code> - send url and receive shortener;
-- **POST**  <code>http://localhost:3000/shorted/all</code> - see all your shortener url;
-- **POST**  <code>http://localhost:3000/:address</code> - use shortener url to visit site;
-- **POST**  <code>http://localhost:3000/login</code> - login to service;
-- **POST**  <code>http://localhost:3000/signup</code> - signup to receive tokens;
-- **POST**  <code>http://localhost:3000/refresh</code> - refresh access token
+- **GET**  <code>http://{your_host}:{your_port}/</code> - home page;
+- **POST**  <code>http://{your_host}:{your_port}/</code> - send url and receive shortener;
+- **POST**  <code>http://{your_host}:{your_port}/shorted/all</code> - see all your shortener url;
+- **POST**  <code>http://{your_host}:{your_port}/:address</code> - use shortener url to visit site;
+- **POST**  <code>http://{your_host}:{your_port}/login</code> - login to service;
+- **POST**  <code>http://{your_host}:{your_port}/signup</code> - signup to receive tokens;
+- **POST**  <code>http://{your_host}:{your_port}/refresh</code> - refresh access token
 

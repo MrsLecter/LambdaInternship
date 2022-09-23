@@ -1,79 +1,105 @@
 import { AuthDb } from "../entity/User";
 import { TokensDb } from "../entity/Tokens";
+import { UrlsDb } from "../entity/Urls";
 import { AppDataSource } from "../data-source";
-import { refresh } from "../controllers/authControllers";
-import { DataSource } from "typeorm";
-import { userObjType, tokenObjType } from "./types";
+import { userObjType } from "../types/types";
+import { DBError, LackOfDataError } from "./errorHandler";
 
 export const saveUser = async ({
   email: email,
   password: password,
-}: userObjType) => {
+}: userObjType): Promise<void> => {
+  if (!email && !password) {
+    throw new LackOfDataError("Send email and password");
+  }
   AppDataSource.initialize()
     .then(async (appDataSource) => {
-      let userDb = new AuthDb();
-      userDb.email = email;
-      userDb.password = password;
-      console.log("in save user", userDb);
-      await AppDataSource.manager.save(userDb);
+      const userObj = new AuthDb();
+      userObj.email = email;
+      userObj.password = password;
+      await AppDataSource.manager.save(userObj);
       AppDataSource.destroy();
     })
     .catch((error) => {
       AppDataSource.destroy();
-      throw new Error(error.message);
+      throw new DBError((error as Error).message);
     });
 };
 
-export const findUserByEmail = async (email: string) => {
+export const findUserByEmail = async (
+  email: string,
+): Promise<AuthDb | null> => {
+  if (!email) {
+    throw new LackOfDataError("Email not provided!");
+  }
   return AppDataSource.initialize()
     .then(async () => {
       const authRepository = AppDataSource.getRepository(AuthDb);
       const userObj = await authRepository.findOneBy({
         email: email,
       });
-      console.log("userObj", userObj);
       AppDataSource.destroy();
       return userObj;
     })
     .catch((error) => {
       AppDataSource.destroy();
-      throw new Error(error.message);
+      throw new DBError((error as Error).message);
     });
 };
 
-export const saveToken = async (token: string) => {
+export const saveToken = async (token: string): Promise<void> => {
+  if (!token) {
+    throw new LackOfDataError("Token not provided!");
+  }
   AppDataSource.initialize()
     .then(async (appDataSource) => {
       const tokensDb = new TokensDb();
       tokensDb.token = token;
-      console.log("savetoken", token);
       await AppDataSource.manager.save(tokensDb);
       AppDataSource.destroy();
     })
     .catch((error) => {
       AppDataSource.destroy();
-      throw new Error(error.message);
+      throw new DBError((error as Error).message);
     });
 };
 
 export const findToken = async (
   token: string | undefined,
 ): Promise<TokensDb | null> => {
+  if (!token) {
+    throw new LackOfDataError("Token not provided!");
+  }
   return AppDataSource.initialize()
     .then(async () => {
-      if (!token) {
-        throw new Error("Token not found!");
-      }
       const authRepository = AppDataSource.getRepository(TokensDb);
       const tokenObj = await authRepository.findOneBy({
         token: token,
       });
-      console.log("tokenObj", tokenObj);
       AppDataSource.destroy();
       return tokenObj;
     })
     .catch((error) => {
       AppDataSource.destroy();
-      throw new Error(error.message);
+      throw new DBError((error as Error).message);
+    });
+};
+
+export const findAllUrls = async (email: string | undefined) => {
+  if (!email) {
+    throw new LackOfDataError("Email not provided!");
+  }
+  return AppDataSource.initialize()
+    .then(async () => {
+      const authRepository = AppDataSource.getRepository(UrlsDb);
+      const usersObj = await authRepository.findBy({
+        email: email,
+      });
+      AppDataSource.destroy();
+      return usersObj;
+    })
+    .catch((error) => {
+      AppDataSource.destroy();
+      throw new DBError((error as Error).message);
     });
 };

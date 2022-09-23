@@ -3,10 +3,10 @@ import "reflect-metadata";
 import type { ErrorRequestHandler } from "express";
 import mainRoutes from "./routes/mainRouter";
 import { json } from "body-parser";
-const helmet = require("helmet");
-const morgan = require("morgan");
-const fs = require("fs");
-const path = require("path");
+import helmet from "helmet";
+import morgan from "morgan";
+import fs from "fs";
+import path from "path";
 import { get404 } from "./controllers/error";
 const PORT = process.env.port || 3000;
 
@@ -34,5 +34,5 @@ try {
   console.log(`Server is listening in port ${PORT}`);
 } catch (e) {
   console.log(e);
-  throw new Error("An Error occured");
+  throw new Error("An Error occured in app.listen");
 }

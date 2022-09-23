@@ -1,11 +1,11 @@
 import express, { Request, Response, NextFunction } from "express";
-import { isValidUrl } from "../utils/utils";
+import { isValidUrl, getPrettierUrls } from "../utils/utils";
 import { UrlsDb } from "../entity/Urls";
 import { AppDataSource } from "../data-source";
-import { DataSource, DataSourceOptions } from "typeorm";
-const jwt = require("jsonwebtoken");
-
-const shortid = require("shortid");
+import { LackOfDataError } from "../utils/errorHandler";
+import { findAllUrls } from "../utils/databaseHandlers";
+import jwt from "jsonwebtoken";
+import shortid from "shortid";
 
 export const startPage = (
   req: Request,
@@ -22,21 +22,16 @@ export const redirectUrl = async (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log(req.params.address);
+  if (!req.params.address) {
+    throw new LackOfDataError("Address can't be empty");
+  }
   let firstUrl;
   AppDataSource.initialize()
     .then(async () => {
-      console.log("Data Source has been initialized!");
       const urlRepository = AppDataSource.getRepository(UrlsDb);
       firstUrl = await urlRepository.findOneBy({
         url_shorted: req.params.address,
       });
-      console.log(
-        "req.params.address",
-        req.params.address,
-        "firstUrl",
-        firstUrl,
-      );
       if (firstUrl === null) {
         AppDataSource.destroy();
         res
@@ -47,12 +42,11 @@ export const redirectUrl = async (
         res.redirect(firstUrl.url);
       }
     })
-    .catch((error) => {
+    .catch((err) => {
       AppDataSource.destroy();
-      throw new Error(error.message);
+      const error = new Error((err as Error).message);
+      return next(error);
     });
-
-  //
 };
 
 export const receiveUrl = async (
@@ -73,13 +67,39 @@ export const receiveUrl = async (
       await AppDataSource.manager.save(urlDb);
       AppDataSource.destroy();
     })
-    .catch((error) => {
+    .catch((err) => {
       AppDataSource.destroy();
-      throw new Error(error.message);
+      const error = new Error((err as Error).message);
+      return next(error);
     });
 
   res.status(200).json({
     old_url: req.body.url,
     shorted_url: `http://${process.env.HOST}:${process.env.PORT}/${shortedUrl}`,
   });
+};
+
+export const showAllShortedUrls = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { email } = req.body;
+  findAllUrls(email)
+    .then((urls) => {
+      if (!urls) {
+        res.status(200).json({
+          message: "No url has been created",
+        });
+      }
+      res.status(200).json({
+        email: email,
+        urls: getPrettierUrls(urls),
+      });
+    })
+    .catch((err) => {
+      AppDataSource.destroy();
+      const error = new Error((err as Error).message);
+      return next(error);
+    });
 };

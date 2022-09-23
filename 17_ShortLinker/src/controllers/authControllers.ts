@@ -1,8 +1,7 @@
-const { validationResult } = require("express-validator");
-import express, { Request, Response, NextFunction } from "express";
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const url = require("url");
+import { validationResult } from "express-validator";
+import { Request, Response, NextFunction } from "express";
+import bcrypt from "bcryptjs";
+import { userObjType } from "../types/types";
 require("dotenv").config();
 import {
   saveUser,
@@ -10,8 +9,7 @@ import {
   findToken,
   saveToken,
 } from "../utils/databaseHandlers";
-
-const { getTokens } = require("../utils/utils");
+import { getTokens } from "../utils/utils";
 
 export const userReg = (req: Request, res: Response, next: NextFunction) => {
   type userObjType = {
@@ -25,9 +23,7 @@ export const userReg = (req: Request, res: Response, next: NextFunction) => {
   }
 
   const { email, password } = req.body;
-
   let userObj = {} as userObjType;
-
   findUserByEmail(email)
     .then((user) => {
       if (user) {
@@ -56,24 +52,27 @@ export const userReg = (req: Request, res: Response, next: NextFunction) => {
 export const logIn = (req: Request, res: Response, next: NextFunction) => {
   let userLogin;
   const { email, password } = req.body;
-  console.log("ep", email, password);
   findUserByEmail(email)
     .then((user) => {
-      console.log("user", user, user === null);
       if (user === null) {
         res
           .status(403)
           .json({ " message": "Not found. Please, register first" });
       }
-      bcrypt.compare(password, user.password).then((isMatch) => {
-        if (isMatch) {
-          return res
-            .status(202)
-            .json({ message: "Accepted", ...getTokens(user.email) });
-        } else {
-          return res.status(403).json({ message: "Forbidden. Incorrect data" });
-        }
-      });
+      bcrypt
+        .compare(password, (user as userObjType).password)
+        .then((isMatch) => {
+          if (isMatch) {
+            return res.status(202).json({
+              message: "Accepted",
+              ...getTokens((user as userObjType).email),
+            });
+          } else {
+            return res
+              .status(403)
+              .json({ message: "Forbidden. Incorrect data" });
+          }
+        });
     })
     .catch((err) => {
       const error = new Error(err);
@@ -91,9 +90,7 @@ export const refresh = (req: Request, res: Response, next: NextFunction) => {
     return res.status(400).json({ message: "Email not provided!" });
   }
   findToken(token).then((tokenObj) => {
-    console.log("tokenObj", tokenObj);
     if (tokenObj === null) {
-      console.log("ttttoken", token);
       saveToken(token);
       return res.status(202).json({
         message: "New refresh token received",

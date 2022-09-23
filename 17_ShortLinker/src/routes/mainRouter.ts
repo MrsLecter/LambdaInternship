@@ -1,17 +1,13 @@
 import { Router } from "express";
-const {
-  userReg,
-  logIn,
-  getMe,
-  refresh,
-} = require("../controllers/authControllers");
-const { body } = require("express-validator");
-const { authenticateToken } = require("../middleware/authMiddleware");
+import { userReg, logIn, refresh } from "../controllers/authControllers";
+import { body } from "express-validator";
+import { authenticateToken } from "../middleware/authMiddleware";
 
 import {
   startPage,
   receiveUrl,
   redirectUrl,
+  showAllShortedUrls,
 } from "../controllers/mainControllers";
 
 const router = Router();
@@ -19,6 +15,9 @@ const router = Router();
 router.get("/", startPage);
 
 router.post("/", authenticateToken, receiveUrl);
+
+router.post("/shorted/all", authenticateToken, showAllShortedUrls);
+
 router.get("/:address", redirectUrl);
 
 router.post(

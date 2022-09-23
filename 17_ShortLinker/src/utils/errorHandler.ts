@@ -1,20 +1,13 @@
-class BaseError extends Error {
+export class BaseError extends Error {
   public readonly name: string;
   public readonly httpCode: HttpStatusCode;
-  public readonly isOperational: boolean;
 
-  constructor(
-    name: string,
-    httpCode: HttpStatusCode,
-    description: string,
-    isOperational: boolean,
-  ) {
+  constructor(name: string, httpCode: HttpStatusCode, description: string) {
     super(description);
     Object.setPrototypeOf(this, new.target.prototype);
 
     this.name = name;
     this.httpCode = httpCode;
-    this.isOperational = isOperational;
 
     Error.captureStackTrace(this);
   }
@@ -25,4 +18,24 @@ export enum HttpStatusCode {
   BAD_REQUEST = 400,
   NOT_FOUND = 404,
   INTERNAL_SERVER = 500,
+}
+
+export class DBError extends BaseError {
+  constructor(
+    name: string,
+    httpCode = HttpStatusCode.INTERNAL_SERVER,
+    description = "Database connection error",
+  ) {
+    super(name, httpCode, description);
+  }
+}
+
+export class LackOfDataError extends BaseError {
+  constructor(
+    name: string,
+    httpCode = HttpStatusCode.BAD_REQUEST,
+    description = "Insufficient data",
+  ) {
+    super(name, httpCode, description);
+  }
 }

@@ -1,8 +1,8 @@
-## Serverless SQS
+## ShortLinker
   URL reduction service
   Express + TS + TypeORM + MySQL + JWT Auth
 ### How to use
-  Don't forget fill your .env file
+  <i>note: Don't forget fill your .env file</i>
   1) Login to service: go to <code>/login</code> and send your email and password;
   2) Singnup: got to <code>/signup</code>, send your email and password and receive accesstoken, refreshtoken with ttl;
   3) Use service: go to <code>/</code>, send your email, accesstoken and url, receive shortened_url;

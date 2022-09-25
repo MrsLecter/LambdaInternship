@@ -33,19 +33,22 @@ export const redirectUrl = async (
         url_shorted: req.params.address,
       });
       if (firstUrl === null) {
-        AppDataSource.destroy();
+        // AppDataSource.destroy();
         res
           .status(400)
           .json({ message: `Url [${req.params.address}] not found` });
       } else {
-        AppDataSource.destroy();
+        // AppDataSource.destroy();
         res.redirect(firstUrl.url);
       }
     })
     .catch((err) => {
-      AppDataSource.destroy();
+      // AppDataSource.destroy();
       const error = new Error((err as Error).message);
       return next(error);
+    })
+    .finally(() => {
+      AppDataSource.destroy();
     });
 };
 
@@ -65,12 +68,15 @@ export const receiveUrl = async (
       urlDb.url = req.body.url;
       urlDb.url_shorted = shortedUrl;
       await AppDataSource.manager.save(urlDb);
-      AppDataSource.destroy();
+      // AppDataSource.destroy();
     })
     .catch((err) => {
-      AppDataSource.destroy();
+      // AppDataSource.destroy();
       const error = new Error((err as Error).message);
       return next(error);
+    })
+    .finally(() => {
+      AppDataSource.destroy();
     });
 
   res.status(200).json({
@@ -98,8 +104,11 @@ export const showAllShortedUrls = async (
       });
     })
     .catch((err) => {
-      AppDataSource.destroy();
+      // AppDataSource.destroy();
       const error = new Error((err as Error).message);
       return next(error);
+    })
+    .finally(() => {
+      AppDataSource.destroy();
     });
 };

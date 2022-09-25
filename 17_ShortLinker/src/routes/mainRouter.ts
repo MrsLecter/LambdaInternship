@@ -14,9 +14,20 @@ const router = Router();
 
 router.get("/", startPage);
 
-router.post("/", authenticateToken, receiveUrl);
+router.post(
+  "/",
+  authenticateToken,
+  body("email").isEmail(),
+  body("url").isLength({ min: 5 }),
+  receiveUrl,
+);
 
-router.post("/shorted/all", authenticateToken, showAllShortedUrls);
+router.post(
+  "/shorted/all",
+  authenticateToken,
+  body("email").isEmail(),
+  showAllShortedUrls,
+);
 
 router.get("/:address", redirectUrl);
 

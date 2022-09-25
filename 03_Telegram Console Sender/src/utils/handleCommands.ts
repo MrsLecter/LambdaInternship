@@ -1,17 +1,17 @@
-import TelegramBot = require("node-telegram-bot-api");
+import TelegramBot from "node-telegram-bot-api";
 import axios, { AxiosResponse } from "axios";
 import { API_WEATHER } from "./constants";
-import { bankResponse } from "./types";
-const {
+import { bankResponse, monoOrPrivatType, apiWeatherData } from "./types";
+import {
   getFormattedData,
   checkOldData,
   rewriteData,
   readData,
-} = require("./handlers");
+} from "./handlers";
 
 const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 
-const handleCommands = () => {
+export const handleCommands = () => {
   bot.setMyCommands([
     { command: "/start", description: "Start" },
     { command: "/info", description: "Info" },
@@ -69,13 +69,15 @@ const handleCommands = () => {
   });
 
   bot.on("callback_query", async (msg: TelegramBot.CallbackQuery) => {
-    const data = msg.data || "";
-    const chatId = msg.message?.chat.id || 0;
+    if (msg.data === undefined) throw Error("Message data undefined!");
+    const data = msg.data as monoOrPrivatType;
+    if (msg.message === undefined) throw Error("Message undefined!");
+    const chatId = msg.message.chat.id;
     if (data?.length === 1) {
-      console.log("url", API_WEATHER);
+      console.log("url", API_WEATHER, "wait, it takes much time!");
       try {
         await axios.get(API_WEATHER).then((response: AxiosResponse) => {
-          let dataResponse: Object[] = response.data.list;
+          const dataResponse: apiWeatherData[] = response.data.list;
           bot.sendMessage(chatId, getFormattedData(dataResponse, +data));
         });
       } catch (error) {
@@ -106,7 +108,7 @@ const handleCommands = () => {
           }
         });
       } else {
-        const parsedData = readData(data);
+        const parsedData = readData(data) as bankResponse;
         const date = new Date(parsedData.recordTime);
         let formatTime =
           String(
@@ -163,4 +165,3 @@ const handleCommands = () => {
 
   bot.on("polling_error", console.log);
 };
-module.exports = { handleCommands };

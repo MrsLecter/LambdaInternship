@@ -1,12 +1,22 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import fs from "fs";
 import { DAYS, MONTHS, MAX_HOUR_VALUE } from "./constants.js";
 const { RATE_URL_MONOBANK, STORAGE_MONOBANK, RATE_URL_PRIVAT, STORAGE_PRIVAT } =
   process.env;
 
-import { fileContent, bankResponse, apiWeatherData } from "./types";
+import {
+  fileContent,
+  bankResponse,
+  apiWeatherData,
+  monoOrPrivatType,
+  responsePrivatApi,
+  responseMonoApi,
+} from "./types";
 
-const getFormattedData = (data: apiWeatherData[], hourInterval = 3): string => {
+export const getFormattedData = (
+  data: apiWeatherData[],
+  hourInterval = 3,
+): string => {
   let formatted = "";
   let tempHour = 0;
 
@@ -57,7 +67,7 @@ const getFormattedData = (data: apiWeatherData[], hourInterval = 3): string => {
   return formatted;
 };
 
-const readData = (bank: string): fileContent => {
+export const readData = (bank: string): fileContent => {
   let fileRoute = "";
 
   if (bank.localeCompare("privat") === 0) {
@@ -71,7 +81,7 @@ const readData = (bank: string): fileContent => {
   return parsedData;
 };
 
-const checkOldData = (bank: string): Boolean => {
+export const checkOldData = (bank: string): Boolean => {
   const { recordTime } = readData(bank);
   const timeGap = (new Date().getTime() - recordTime) / 60000;
   if (timeGap <= 2) {
@@ -80,8 +90,8 @@ const checkOldData = (bank: string): Boolean => {
   return true;
 };
 
-const rewriteData = async (
-  bank: "privat" | "monobank",
+export const rewriteData = async (
+  bank: monoOrPrivatType,
 ): Promise<bankResponse> => {
   let fileRoute: string;
   let bankUrl: string = "";
@@ -97,11 +107,11 @@ const rewriteData = async (
   return await axios
     .get(bankUrl)
     .then((response) => {
-      const { buy, sale, rateBuy, rateSell } = response.data[0];
       const newDate = new Date();
       let obj = {} as bankResponse;
 
       if (bank.localeCompare("privat") === 0) {
+        const { buy, sale } = response.data[0] as responsePrivatApi;
         obj = {
           bank,
           buy,
@@ -109,10 +119,11 @@ const rewriteData = async (
           recordTime: newDate.getTime(),
         };
       } else if (bank.localeCompare("monobank") === 0) {
+        const { rateBuy, rateSell } = response.data[0] as responseMonoApi;
         obj = {
           bank,
-          buy: rateBuy,
-          sale: rateSell,
+          buy: String(rateBuy),
+          sale: String(rateSell),
           recordTime: newDate.getTime(),
         };
       }
@@ -126,5 +137,3 @@ const rewriteData = async (
       throw Error((err as Error).message);
     });
 };
-
-module.exports = { rewriteData, checkOldData, readData, getFormattedData };

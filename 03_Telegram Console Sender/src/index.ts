@@ -1,19 +1,17 @@
 require("dotenv").config();
 process.env["NTBA_FIX_319"] = 1;
-
 import TelegramBot from "node-telegram-bot-api";
-const commander = require("commander");
+import commander from "commander";
+import { handleCommands } from "./utils/handleCommands.js";
+import express from "express";
+import http from "http";
+import { Server } from "socket.io";
 
+const app = express();
+const server = http.createServer(app);
 const program = new commander.Command();
-const { handleCommands } = require("./utils/handleCommands.js");
-
 const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 
-const express = require("express");
-const app = express();
-const http = require("http");
-const server = http.createServer(app);
-import { Server } from "socket.io";
 const io = new Server(server);
 
 io.on("connection", (socket) => {

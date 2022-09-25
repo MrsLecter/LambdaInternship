@@ -13,5 +13,10 @@
     "inquirer": "^8.2.4",
     "prettylink": "^1.0.0"
   },
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "eslint": "^8.24.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0"
+  }
 }

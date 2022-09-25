@@ -1,23 +1,10 @@
 require("dotenv").config();
-const mongo = require("mongodb");
-const MongoClient = mongo.MongoClient;
-let _db;
+import { MongoClient } from "mongodb";
 
-export const mongoConnect = (callback) => {
-  MongoClient.connect(process.env.CLIENT_STR)
-    .then((client) => {
-      _db = client.db();
-      callback(client);
-    })
-    .catch((error) => {
-      console.log(err);
-      throw new Error(error);
-    });
-};
-
-export const getDB = () => {
-  if (_db) {
-    return _db;
+export const getDB = (): MongoClient | string => {
+  const client = new MongoClient(process.env.CLIENT_STR);
+  if (client) {
+    return client;
   }
   throw new Error("No database found!");
 };

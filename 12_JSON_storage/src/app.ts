@@ -1,3 +1,4 @@
+require("dotenv").config();
 import express, { Request, Response, NextFunction } from "express";
 import type { ErrorRequestHandler } from "express";
 import customRoutes from "./routes/custom";
@@ -5,7 +6,7 @@ import { get404 } from "./controllers/error";
 import { json } from "body-parser";
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT | 3000;
 
 app.use(json());
 

@@ -1,46 +1,75 @@
-const mongo = require("mongodb");
+require("dotenv").config();
+import mongo from "mongodb";
+import { getDB } from "../utils/database";
+import { routObjType } from "../types/types";
 
-const { getDB } = require("../utils/database");
+const { DB_NAME, COLLECTION } = process.env;
 
-type inputObj = {
-  rout: string;
-  obj: object;
-};
-
-export const save = async (obj: inputObj) => {
+export const save = async (obj: routObjType): Promise<void> => {
   const { rout, ...objBody } = obj;
-  const db = getDB();
+  const client = getDB();
+  try {
+    if (typeof client === "string") throw Error("database not found!");
+    const routObj = client
+      .db(DB_NAME)
+      .collection(COLLECTION)
+      .findOne({ rout: obj.rout });
 
-  await db
-    .collection("routes")
-    .find({ rout: rout })
-    .next()
-    .then((data) => {
-      if (data === null) {
-        db.collection("routes").insertOne({ rout: rout, obj: objBody });
+    routObj.then((routData) => {
+      if (!routData) {
+        client
+          .db(DB_NAME)
+          .collection(COLLECTION)
+          .insertOne({ rout: rout, obj: objBody });
       } else {
-        db.collection("routes").updateOne(
-          { rout: rout },
-          { $set: { obj: objBody } }
-        );
+        client
+          .db(DB_NAME)
+          .collection(COLLECTION)
+          .updateOne({ rout: rout }, { $set: { obj: objBody } });
       }
-      return data;
-    })
-    .catch((error) => {
-      throw new Error(error);
     });
+    await client.close();
+  } catch (err) {
+    throw Error((err as Error).message);
+  }
 };
 
-export const findByRout = async (rout_name: string) => {
-  const db = getDB();
-  return await db
-    .collection("routes")
-    .find({ rout: rout_name })
-    .next()
-    .then((data) => {
+export const findByRout = async (routName: string) => {
+  const client = getDB();
+  try {
+    if (typeof client === "string") throw Error("database not found!");
+    const routes = client
+      .db(DB_NAME)
+      .collection(COLLECTION)
+      .findOne({ rout: routName });
+    await client.close();
+    return routes.then((data) => {
       return data;
-    })
-    .catch((error) => {
-      throw new Error(error);
     });
+  } catch (err) {
+    throw Error((err as Error).message);
+  }
+};
+
+export const deleteByRout = async (routName: string) => {
+  const client = getDB();
+  let objectRout;
+  try {
+    if (typeof client === "string") throw Error("database not found!");
+    const routObj = client
+      .db(DB_NAME)
+      .collection(COLLECTION)
+      .findOne({ rout: routName });
+
+    objectRout = await routObj.then(async (routData) => {
+      if (routData) {
+        await client.db(DB_NAME).collection(COLLECTION).deleteOne(routData);
+      }
+      return routData;
+    });
+    await client.close();
+    return objectRout;
+  } catch (err) {
+    throw Error((err as Error).message);
+  }
 };

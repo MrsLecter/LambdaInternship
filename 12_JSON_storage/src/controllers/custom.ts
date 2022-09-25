@@ -1,21 +1,13 @@
 import express, { Request, Response, NextFunction } from "express";
-const mongoConnect = require("../utils/database").mongoConnect;
-const { save, findByRout } = require("../models/routs");
-const { isValidParam } = require("../utils/uri_validator");
+import { save, findByRout, deleteByRout } from "../models/routs";
+import { isValidParam } from "../utils/uriValidator";
+import { routObjType } from "../types/types";
 
-mongoConnect((client) => {
-  console.log("MongoDB connected ...");
-});
-
-export const getСustom = (
-  req: express.Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const getСustom = (req: Request, res: Response, next: NextFunction) => {
   findByRout(req.params.rout)
-    .then((data) => {
-      if (data !== null) {
-        res.status(200).json(data.obj);
+    .then((routObject) => {
+      if (routObject) {
+        res.status(200).json(routObject.obj);
       } else {
         res.status(400).json({ message: "Page not foud" });
       }
@@ -26,12 +18,12 @@ export const getСustom = (
 };
 
 export const createCustom = (
-  req: express.Request,
+  req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
-  let obj = req.body;
-
+  if (!req.body) throw Error("Empty body object");
+  let obj = req.body as routObjType;
   if (isValidParam(req.params.rout)) {
     obj.rout = req.params.rout;
     save(obj);
@@ -39,4 +31,21 @@ export const createCustom = (
   } else {
     res.status(400).json({ message: "Bad request. Change routs name" });
   }
+};
+
+export const deleteCustom = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  deleteByRout(req.params.rout)
+    .then((routObject) => {
+      if (!routObject) {
+        res.status(400).json({ message: "Object not found!" });
+      }
+      res.status(200).json({ message: "Successfully deleted" });
+    })
+    .catch((error) => {
+      throw new Error((error as Error).message);
+    });
 };

@@ -11,9 +11,9 @@ app.use(bodyParser.json());
 app.use(authRout);
 
 app.use((error, req, res, next) => {
-    res.status(500).json('500', {"message":"Internal Server Error"});
-  });
-  
+  res.status(500).json("500", { message: "Internal Server Error" });
+});
+
 try {
   mongoConnect((client) => {
     app.listen(PORT);

@@ -7,7 +7,12 @@ type objectCurrency = {
   price: number;
 };
 
-function getFilteredData(data: objectCurrency[], required_currency: string[]) {
+const getFilteredData = (
+  data: objectCurrency[],
+  required_currency: string[],
+): {
+  [index: string]: any;
+} => {
   let filtered: { [index: string]: any } = {};
   for (let i = 0; i < data.length; i++) {
     if (required_currency.includes(data[i].symbol)) {
@@ -15,7 +20,7 @@ function getFilteredData(data: objectCurrency[], required_currency: string[]) {
     }
   }
   return filtered;
-}
+};
 
 let response = null;
 module.exports = new Promise<object>(async (resolve, reject) => {
@@ -36,7 +41,6 @@ module.exports = new Promise<object>(async (resolve, reject) => {
     }
   }
   if (response) {
-    // success
     const filtered = getFilteredData(response.data.coins, POPULAR_CURRENCY);
     resolve(filtered);
   }

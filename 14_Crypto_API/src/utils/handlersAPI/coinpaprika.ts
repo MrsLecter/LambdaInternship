@@ -12,10 +12,12 @@ type objectCurrency = {
 
 //NOTE: everything works. if there are failures at the request to repeat the request after 2 seconds
 
-function getFilteredData(
+const getFilteredData = (
   data: objectCurrency[],
   required_currency: string[],
-): object {
+): {
+  [index: string]: any;
+} => {
   let filtered: { [index: string]: any } = {};
   for (let i = 0; i < data.length; i++) {
     if (required_currency.includes(data[i].symbol)) {
@@ -23,7 +25,7 @@ function getFilteredData(
     }
   }
   return filtered;
-}
+};
 
 let response = null;
 module.exports = new Promise<object>(async (resolve, reject) => {

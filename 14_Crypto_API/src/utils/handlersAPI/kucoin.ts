@@ -2,10 +2,12 @@ const axios = require("axios").default;
 import { POPULAR_CURRENCY } from "../constants";
 require("dotenv").config();
 
-function getFilteredData(
+const getFilteredData = (
   data: { [index: string]: any },
   required_currency: string[],
-): object {
+): {
+  [index: string]: any;
+} => {
   let filtered: { [index: string]: any } = {};
   for (let item in data) {
     if (required_currency.includes(item)) {
@@ -13,7 +15,7 @@ function getFilteredData(
     }
   }
   return filtered;
-}
+};
 
 let response = null;
 module.exports = new Promise<object>(async (resolve, reject) => {

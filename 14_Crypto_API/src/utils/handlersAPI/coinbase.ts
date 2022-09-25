@@ -1,4 +1,4 @@
-const axios = require("axios").default;
+import axios from "axios";
 import { POPULAR_CURRENCY } from "../constants";
 
 const promise_list = POPULAR_CURRENCY.map((currency) => {

@@ -1,16 +1,15 @@
 require("dotenv").config();
-const express = require("express");
-const { Request, Response, NextFunction } = require("express");
-const helmet = require("helmet");
+import express from "express";
+import helmet from "helmet";
 import type { ErrorRequestHandler } from "express";
 import { get404 } from "./controllers/error";
-const { json } = require("body-parser");
-const morgan = require("morgan");
-const fs = require("fs");
-const path = require("path");
+import { json } from "body-parser";
+import morgan from "morgan";
+import fs from "fs";
+import path from "path";
 
 import mainRouts from "./routes/mainRoutes";
-import { toRefreshDbData } from "./sheduled_jobs/cron_job";
+// import { toRefreshDbData } from "./sheduled_jobs/cron_job";
 
 const PORT = process.env.PORT;
 const app = express();
@@ -23,7 +22,7 @@ const logStream = fs.createWriteStream(path.join(__dirname, "logs.log"), {
 });
 app.use(morgan("combined", { stream: logStream }));
 
-toRefreshDbData();
+// toRefreshDbData();
 
 app.use(mainRouts);
 app.use(get404);

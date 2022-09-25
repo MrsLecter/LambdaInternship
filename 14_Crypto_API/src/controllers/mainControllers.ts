@@ -1,11 +1,11 @@
-import express, { Request, Response, NextFunction } from "express";
-
-const {
+import { Request, Response, NextFunction } from "express";
+import {
   getCurrentMarket,
   getCurrentCurrency,
   getAllFromPeriod,
-} = require("../models/mainModels");
-const { getAverage } = require("../utils/utils");
+} from "../models/mainModels";
+import { objectRate } from "../utils/types";
+import { getAverage } from "../utils/utils";
 
 export const startPage = (
   req: Request,
@@ -20,15 +20,14 @@ export const getDataForCertainPeriod = (
   res: Response,
   next: NextFunction,
 ): void => {
-  getAllFromPeriod(req.params["period"])
-    //notify the user that there are no entries (no entries in the last 30 minutes)
-    .then((data: object[]) =>
+  getAllFromPeriod(+req.params["period"])
+    .then((data) =>
       res
         .status(200)
         .json(
           Object.keys(data[0]).length === 0
             ? { message: "No data for current period" }
-            : getAverage(data[0]),
+            : getAverage(data[0] as objectRate[]),
         ),
     )
     .catch((err: string) => {
@@ -41,14 +40,14 @@ export const getDataForCertainCurrency = (
   res: Response,
   next: NextFunction,
 ): void => {
-  getCurrentCurrency(req.params["currency"], req.params["period"])
+  getCurrentCurrency(req.params["currency"], 30)
     .then((data: object[]) =>
       res
         .status(200)
         .json(
           Object.keys(data[0]).length === 0
             ? { message: "No data for current period" }
-            : getAverage(data[0]),
+            : getAverage(data[0] as objectRate[]),
         ),
     )
     .catch((err: string) => {
@@ -61,5 +60,8 @@ export const getDataForCertainMarket = async (
   res: Response,
   next: NextFunction,
 ) => {
-  res.status(200).json(await getCurrentMarket(req.params["market"]));
+  const market = req.params["market"];
+  getCurrentMarket(market).then((data) =>
+    res.status(200).json({ [market]: data }),
+  );
 };

@@ -4,7 +4,16 @@ import { vacationType, sheduleType, shortedSheduleObject } from "./types";
 const getShortedvacationShedule = (
   vacationShedule: vacationType[],
 ): sheduleType => {
-  let obj;
+  let obj: {
+    userId: number;
+    name: string;
+    weekendDates: [
+      {
+        startDate: string;
+        endDate: string;
+      },
+    ];
+  };
   let ids: number[] = [];
   return vacationShedule.reduce((result: any, vacationPeriod: vacationType) => {
     if (!ids.includes(vacationPeriod.user._id)) {

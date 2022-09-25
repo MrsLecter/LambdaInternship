@@ -1,3 +1,6 @@
+import { NORMAL_POWER } from "./constants";
+const fs = require("fs");
+
 export const toReturnLocationByIp = (
   userIp: number,
   ipTable: number[][],
@@ -15,7 +18,6 @@ export const toReturnLocationByIp = (
 };
 
 export const toConvertIPtoNumber = (ip: string): number => {
-  const { NORMAL_POWER } = require("./constants");
   let arr = ip.split(".");
   let number =
     parseInt(arr[0]) * NORMAL_POWER ** 3 +
@@ -26,7 +28,6 @@ export const toConvertIPtoNumber = (ip: string): number => {
 };
 
 export const getDataTable = (tablePath: string): number[][] => {
-  const fs = require("fs");
   const data = fs.readFileSync(tablePath, { encoding: "utf8", flag: "r" });
   const arrData = data
     .replaceAll('"', "")
@@ -35,5 +36,6 @@ export const getDataTable = (tablePath: string): number[][] => {
       let row = item.split(",");
       return [parseInt(row[0]), parseInt(row[1]), row[3]];
     });
+  console.log(arrData);
   return arrData;
 };

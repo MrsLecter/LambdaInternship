@@ -1,12 +1,5 @@
-const { toCalculateDeadline } = require("./utils");
-
-enum LangTime {
-  "ru" = 1333,
-  "ua" = 1333,
-  "en" = 333,
-}
-type mime = "none" | "doc" | "docx" | "rtf" | "other";
-type lang = "ua" | "ru" | "en";
+import { toCalculateDeadline } from "./utils";
+import { LangTime, mime, lang } from "../types/types";
 
 export const getCalculatedTimeMs = (
   language: lang,
@@ -33,7 +26,7 @@ export const getDeadline = (
   signCount: number,
   docType: mime,
   orderDate: Date,
-): string => {
+): Date => {
   const timeForWork = getCalculatedTimeMs(language, signCount, docType);
   const deadline = toCalculateDeadline(timeForWork, orderDate);
   return deadline;

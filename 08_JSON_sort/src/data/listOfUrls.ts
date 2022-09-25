@@ -1,4 +1,4 @@
-const URL = [
+export const URL = [
   "https://jsonbase.com/lambdajson_type1/793",
   "https://jsonbase.com/lambdajson_type1/955",
   "https://jsonbase.com/lambdajson_type1/231",
@@ -20,4 +20,3 @@ const URL = [
   "https://jsonbase.com/lambdajson_type4/350",
   "https://jsonbase.com/lambdajson_type4/640",
 ];
-module.exports = { URL };

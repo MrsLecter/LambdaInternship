@@ -1,6 +1,6 @@
-const { URL } = require("../data/listOfUrls");
-const axios = require("axios").default;
-const { getFormattedResponse } = require("./utils");
+import { URL } from "./data/listOfUrls";
+import axios from "axios";
+import { getFormattedResponse } from "./utils";
 
 const handleUrl = async (url: string, counter = 1): Promise<string> => {
   if (counter == 4) return "error!";

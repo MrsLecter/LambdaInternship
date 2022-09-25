@@ -1,13 +1,5 @@
-enum LangCost {
-  "ua" = 0.05,
-  "ru" = 0.05,
-  "en" = 0.12,
-}
+import { LangCost, mime, lang } from "../types/types";
 
-type mime = "none" | "doc" | "docx" | "rtf" | "other";
-type lang = "ua" | "ru" | "en";
-
-// return price, time, deadline, deadline date
 export const getCost = (
   language: lang,
   signCount: number,

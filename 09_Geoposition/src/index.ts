@@ -6,7 +6,7 @@ import {
   getDataTable,
 } from "./utils/handlers";
 
-const { TABLE_PATH } = require("./utils/constants");
+import { TABLE_PATH } from "./utils/constants";
 
 const app = express();
 

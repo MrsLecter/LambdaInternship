@@ -4,7 +4,9 @@
 2) build: npm build
 3) run : npm start
 
-## Endpoints
+## Endpoints 
 **GET** ".../custom/[your_rout]" - get your object;
+
 **POST** ".../custom/[your_rout]" -/{rout:your_rout, object: your_object}/ - post your object on your new rout or update object on existing rout;
+
 **DELETE** ".../custom/[your_rout]"-/{rout: your_rout}/ - delete your rout

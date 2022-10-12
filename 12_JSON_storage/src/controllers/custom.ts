@@ -3,6 +3,10 @@ import { save, findByRout, deleteByRout } from "../models/routs";
 import { isValidParam } from "../utils/uriValidator";
 import { routObjType } from "../types/types";
 
+export const getHome = (req: Request, res: Response, next: NextFunction) => {
+  res.status(200).json({ message: "Welcome to json starage!" });
+};
+
 export const getСustom = (req: Request, res: Response, next: NextFunction) => {
   findByRout(req.params.rout)
     .then((routObject) => {

@@ -1,7 +1,14 @@
 import { Router } from "express";
-import { getСustom, createCustom, deleteCustom } from "../controllers/custom";
+import {
+  getHome,
+  getСustom,
+  createCustom,
+  deleteCustom,
+} from "../controllers/custom";
 
 const router = Router();
+
+router.get("/", getHome);
 
 router.get("/:rout", getСustom);
 

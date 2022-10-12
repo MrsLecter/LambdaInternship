@@ -1,8 +1,10 @@
+import internal from "stream";
+
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
       CLIENT_STR: string;
-      PORT: number;
+      PORT: string;
       DB_NAME: string;
       COLLECTION: string;
       MONGO_IMAGE_STR: string;

@@ -6,7 +6,7 @@ import { get404 } from "./controllers/error";
 import { json } from "body-parser";
 
 const app = express();
-const PORT = process.env.PORT | 3000;
+const PORT = parseInt(process.env.PORT) | 3000;
 
 app.use(json());
 

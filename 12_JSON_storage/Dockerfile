@@ -6,10 +6,12 @@ WORKDIR /app
 
 COPY ["package.json", "package-lock.json*", "./"]
 
-RUN npm install --production
+RUN npm install
 
 COPY . .
 
+RUN npm run build
+
 EXPOSE 3000
 
-CMD [ "node", "./dist/app.js" ]
+CMD ["node", "./dist/app.js" ]

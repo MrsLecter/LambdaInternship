@@ -2,10 +2,10 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       BOT_TOKEN: string;
-      NTBA_FIX_319: number;
-      CHAT_ID: number;
-      ODESSA_LAT: number;
-      ODESSA_LONG: number;
+      NTBA_FIX_319: string;
+      CHAT_ID: string;
+      ODESSA_LAT: string;
+      ODESSA_LONG: string;
       WEATHER_API_KEY: string;
       MYSQL_USER: string;
       MYSQL_PASSWORD: string;

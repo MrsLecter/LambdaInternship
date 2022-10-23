@@ -1,29 +1,29 @@
-export type fileContent = {
+export type FileContent = {
   recordTime: number;
 };
 
-export type destructuringBankResponseType<T, U> = {
+export type DestructuringBankResponseType<T, U> = {
   buy: T;
   sale: T;
   rateBuy: U;
   rateSell: U;
 };
 
-export type bankResponse = {
+export type BankResponse = {
   bank: string;
   buy: string;
   sale: string;
   recordTime: number;
 };
 
-export type responsePrivatApi = {
+export type ResponsePrivatApi = {
   ccy: string;
   base_ccy: string;
   buy: string;
   sale: string;
 };
 
-export type responseMonoApi = {
+export type ResponseMonoApi = {
   currencyCodeA: number;
   currencyCodeB: number;
   date: number;
@@ -31,7 +31,7 @@ export type responseMonoApi = {
   rateSell: number;
 };
 
-export type apiWeatherData = {
+export type ApiWeatherData = {
   dt: number;
   main: {
     temp: number;
@@ -44,7 +44,7 @@ export type apiWeatherData = {
     humidity: number;
     temp_kf: number;
   };
-  weather: weatherDescription[];
+  weather: WeatherDescription[];
   clouds: { all: number };
   wind: { speed: number; deg: number; gust: number };
   visibility: number;
@@ -53,13 +53,13 @@ export type apiWeatherData = {
   dt_txt: string;
 };
 
-type weatherDescription = {
+type WeatherDescription = {
   description: string;
 };
 
-export type monoOrPrivatType = "privat" | "monobank";
+export type MonoOrPrivatType = "privat" | "monobank";
 
-export type currencyResponseType = {
+export type CurrencyResponseType = {
   ccy: string;
   base_ccy: string;
   buy: string;

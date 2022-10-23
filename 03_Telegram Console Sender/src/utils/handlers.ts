@@ -1,20 +1,20 @@
 import axios, { AxiosResponse } from "axios";
 import fs from "fs";
-import { DAYS, MONTHS, MAX_HOUR_VALUE } from "./constants.js";
+import { DAYS, MONTHS, MAX_HOUR_VALUE } from "../constants/constants.js";
 const { RATE_URL_MONOBANK, STORAGE_MONOBANK, RATE_URL_PRIVAT, STORAGE_PRIVAT } =
   process.env;
 
 import {
-  fileContent,
-  bankResponse,
-  apiWeatherData,
-  monoOrPrivatType,
-  responsePrivatApi,
-  responseMonoApi,
-} from "./types";
+  FileContent,
+  BankResponse,
+  ApiWeatherData,
+  MonoOrPrivatType,
+  ResponsePrivatApi,
+  ResponseMonoApi,
+} from "../types/types";
 
 export const getFormattedData = (
-  data: apiWeatherData[],
+  data: ApiWeatherData[],
   hourInterval = 3,
 ): string => {
   let formatted = "";
@@ -67,7 +67,7 @@ export const getFormattedData = (
   return formatted;
 };
 
-export const readData = (bank: string): fileContent => {
+export const readData = (bank: string): FileContent => {
   let fileRoute = "";
 
   if (bank.localeCompare("privat") === 0) {
@@ -91,8 +91,8 @@ export const checkOldData = (bank: string): Boolean => {
 };
 
 export const rewriteData = async (
-  bank: monoOrPrivatType,
-): Promise<bankResponse> => {
+  bank: MonoOrPrivatType,
+): Promise<BankResponse> => {
   let fileRoute: string;
   let bankUrl: string = "";
 
@@ -108,10 +108,10 @@ export const rewriteData = async (
     .get(bankUrl)
     .then((response) => {
       const newDate = new Date();
-      let obj = {} as bankResponse;
+      let obj = {} as BankResponse;
 
       if (bank.localeCompare("privat") === 0) {
-        const { buy, sale } = response.data[0] as responsePrivatApi;
+        const { buy, sale } = response.data[0] as ResponsePrivatApi;
         obj = {
           bank,
           buy,
@@ -119,7 +119,7 @@ export const rewriteData = async (
           recordTime: newDate.getTime(),
         };
       } else if (bank.localeCompare("monobank") === 0) {
-        const { rateBuy, rateSell } = response.data[0] as responseMonoApi;
+        const { rateBuy, rateSell } = response.data[0] as ResponseMonoApi;
         obj = {
           bank,
           buy: String(rateBuy),

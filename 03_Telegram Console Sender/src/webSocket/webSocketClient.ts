@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-import { TWENTYFIVE_MINUTES } from "./utils/constants.js";
+import { TWENTYFIVE_MINUTES } from "../constants/constants.js";
 
 const socket = io(process.env.HEROKU_URL);
 

@@ -2,7 +2,11 @@ require("dotenv").config();
 
 const { ODESSA_LAT, ODESSA_LONG, WEATHER_API_KEY } = process.env;
 
-export const API_WEATHER = `https://api.openweathermap.org/data/2.5/forecast?lat=${ODESSA_LAT}&lon=${ODESSA_LONG}&exclude=daily&units=metric&lang=ru&appid=${WEATHER_API_KEY}`;
+export const API_WEATHER = `https://api.openweathermap.org/data/2.5/forecast?lat=${parseInt(
+  ODESSA_LAT,
+)}&lon=${parseInt(
+  ODESSA_LONG,
+)}&exclude=daily&units=metric&lang=ru&appid=${WEATHER_API_KEY}`;
 
 export const DAYS = [
   "воскресенье",

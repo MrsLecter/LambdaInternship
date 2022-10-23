@@ -1,5 +1,6 @@
 const crc32 = require("crc-32");
 const fs = require("fs");
+import { intersectionTable, uniqueTable } from "./types/types";
 
 const ALL_FILES_AMOUNT = 20;
 
@@ -18,10 +19,6 @@ const getAllFiles = (filesAmount = 1): string[] => {
 };
 
 const getUniqueValues = (filesData: string[]): string => {
-  type uniqueTable = {
-    [index: number]: string;
-  };
-
   let hTable = {} as uniqueTable;
 
   for (let file of filesData) {
@@ -35,11 +32,10 @@ const getUniqueValues = (filesData: string[]): string => {
   return `Unique word combinations: ${hTableLength} in ${filesData.length} files`;
 };
 
-const getIntersection = (filesData: string[]): string => {
-  type intersectionTable = {
-    [index: number]: [number[], string];
-  };
-
+const getIntersection = (
+  filesData: string[],
+  filesNumber: number = 20,
+): string => {
   let hTable = {} as intersectionTable;
   const filesAmount = filesData.length;
   let rezArr = [];
@@ -63,13 +59,13 @@ const getIntersection = (filesData: string[]): string => {
     fileIndex++;
   }
 
-  if (filesAmount === 20) {
+  if (filesNumber === 20) {
     for (let item in hTable) {
-      if (hTable[item][0].length === filesAmount) {
+      if (hTable[item][0].length === 20) {
         rezArr.push(hTable[item]);
       }
     }
-  } else if (filesAmount === 10) {
+  } else if (filesNumber === 10) {
     for (let item in hTable) {
       if (hTable[item][0].length >= 10) {
         rezArr.push(hTable[item]);
@@ -77,7 +73,7 @@ const getIntersection = (filesData: string[]): string => {
     }
   }
 
-  return `Word combinations that are in all ${filesAmount} files: ${rezArr.length}`;
+  return `Word combinations that are in all ${filesNumber} files: ${rezArr.length}`;
 };
 
 const allFilesData = getAllFiles(20);
@@ -89,18 +85,16 @@ console.log(unicWords); //20 files ==> 129233
 console.log("time: " + (finishUnic - startUnic) + " msec ");
 //from 870.4358449988067 msec
 
-const allFilesData10 = getAllFiles(10);
-
-const intersectoinStart10 = performance.now();
-const iintWords10 = getIntersection(allFilesData10);
-const intersectoinFinish10 = performance.now();
-console.log(iintWords10); //10 files ==> 1764;
-console.log("time: ", intersectoinFinish10 - intersectoinStart10, " msec ");
-
 let intersectoinStart = performance.now();
 let intWords = getIntersection(allFilesData);
 let intersectoinFinish = performance.now();
 console.log(intWords); //20 files ==> 441
 console.log("time: ", intersectoinFinish - intersectoinStart, " msec ");
-//10 files => time: 1299.0277260020375 msec
-//20 files => time: 1782.0763970017433 msec
+
+let intersectoinStart2 = performance.now();
+let intWords2 = getIntersection(allFilesData, 10);
+let intersectoinFinish2 = performance.now();
+console.log(intWords2); //20 files ==> 73246
+console.log("time: ", intersectoinFinish2 - intersectoinStart2, " msec ");
+//10 files => time: 2178.7542790006846 msec
+//20 files => time: 1671.895828999579 msec

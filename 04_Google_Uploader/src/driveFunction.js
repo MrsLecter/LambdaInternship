@@ -16,7 +16,7 @@ const uploadFile = async (filePath) => {
     });
     return response.data.id;
   } catch (err) {
-    console.log(err.message);
+    console.error(err.message);
   }
 };
 
@@ -36,19 +36,19 @@ const generatePublicURL = async (fileId) => {
     });
     return result.data.webViewLink;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
 const renameFile = async (fileId, newName) => {
-  var body = { name: newName };
+  const body = { name: newName };
   drive.files.update(
     {
       fileId,
       resource: body,
     },
     (err) => {
-      if (err) return console.log("The API returned an error: " + fileId);
+      if (err) return console.error("The API returned an error: " + fileId);
     },
   );
 };

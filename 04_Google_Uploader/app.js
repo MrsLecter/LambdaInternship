@@ -29,7 +29,7 @@ const getfilePath = async () => {
       );
       await getFileName(filePath, fileExtension, fileID, fileName);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.error(err));
 };
 
 getfilePath();

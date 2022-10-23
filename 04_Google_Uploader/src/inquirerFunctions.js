@@ -22,7 +22,7 @@ const getFileName = async (filePath, fileExtension, fileID, fileName) => {
         await getLink(fileID);
       }
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.error(err));
 };
 
 const changeFileName = async (filePath, fileExtension, fileID) => {
@@ -40,7 +40,7 @@ const changeFileName = async (filePath, fileExtension, fileID) => {
       await renameFile(fileID, answer.new_file_name);
       await getLink(fileID);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.error(err));
 };
 
 const getLink = async (fileID) => {
@@ -64,14 +64,14 @@ const getLink = async (fileID) => {
             console.log("Your shorten link: " + result);
           })
           .catch((err) => {
-            console.log(err);
+            console.error(err);
           });
       } else {
         const webLink = await generatePublicURL(fileID);
         console.log("Your standart link: " + webLink);
       }
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.error(err));
 };
 
 module.exports = { getFileName };

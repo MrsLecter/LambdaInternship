@@ -1,5 +1,7 @@
 const crc32 = require("crc-32");
 const fs = require("fs");
+const path = require("path");
+
 import { intersectionTable, uniqueTable } from "./types/types";
 
 const ALL_FILES_AMOUNT = 20;
@@ -8,7 +10,10 @@ const getAllFiles = (filesAmount = 1): string[] => {
   let allFiles = [] as string[];
   try {
     for (let file_number = 0; file_number < filesAmount; file_number++) {
-      const file = fs.readFileSync(`./words/out${file_number}.txt`, "utf8");
+      const file = fs.readFileSync(
+        path.join(__dirname, `../words/out${file_number}.txt`),
+        "utf8",
+      );
 
       allFiles.push(file.split("\n"));
     }
@@ -83,18 +88,18 @@ const unicWords = getUniqueValues(allFilesData);
 const finishUnic = performance.now();
 console.log(unicWords); //20 files ==> 129233
 console.log("time: " + (finishUnic - startUnic) + " msec ");
-//from 870.4358449988067 msec
+//from 748.0897660013288 msec
 
-let intersectoinStart = performance.now();
-let intWords = getIntersection(allFilesData);
-let intersectoinFinish = performance.now();
+const intersectoinStart = performance.now();
+const intWords = getIntersection(allFilesData);
+const intersectoinFinish = performance.now();
 console.log(intWords); //20 files ==> 441
 console.log("time: ", intersectoinFinish - intersectoinStart, " msec ");
 
-let intersectoinStart2 = performance.now();
-let intWords2 = getIntersection(allFilesData, 10);
-let intersectoinFinish2 = performance.now();
+const intersectoinStart2 = performance.now();
+const intWords2 = getIntersection(allFilesData, 10);
+const intersectoinFinish2 = performance.now();
 console.log(intWords2); //20 files ==> 73246
 console.log("time: ", intersectoinFinish2 - intersectoinStart2, " msec ");
-//10 files => time: 2178.7542790006846 msec
-//20 files => time: 1671.895828999579 msec
+//10 files => time: 1912.6917430013418 msec
+//20 files => time: 1540.3435130007565 msec

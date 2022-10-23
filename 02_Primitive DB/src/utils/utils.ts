@@ -18,6 +18,7 @@ export const addPerson = (persons: Answers[]): void => {
   if (persons.length > 0) {
     persons.forEach((person: Answers) => {
       if (checkData(person)) {
+        person.name = person.name.toLowerCase();
         currentPersonsData.push(person);
       }
     });
@@ -29,11 +30,12 @@ export const findPerson = (requestedPersonName: string): string => {
   let requestedPerson = "";
   const currentPersonsData: Answers[] = JSON.parse(readFile() as string);
   currentPersonsData.forEach((person: Answers) => {
-    if (person["name"].localeCompare(requestedPersonName) === 0) {
+    if (person["name"].localeCompare(requestedPersonName.toLowerCase()) === 0) {
       requestedPerson = JSON.stringify(person);
     }
   });
-  return requestedPerson === undefined
+
+  return requestedPerson === ""
     ? `Person with name [${requestedPersonName}] not found!`
     : requestedPerson;
 };

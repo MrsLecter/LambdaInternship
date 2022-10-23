@@ -44,18 +44,18 @@ export const getFormattedData = (
     feelsTemp = Math.round(data[i].main.feels_like);
     weatherDescription = data[i].weather[0].description;
 
-    if (i !== 0) {
-      const diff = Math.abs(hours - tempHour);
-      const interv = diff > hourInterval ? MAX_HOUR_VALUE - diff : diff;
-      if (interv === hourInterval) {
-        tempHour = hours;
-        formatted += `\n   ${hours}:${minutes}0, ${
-          currentTemp > 0 ? "+" + currentTemp : "-" + currentTemp
-        }${signDegree}C, ощущается: ${
-          feelsTemp > 0 ? "+" + feelsTemp : "-" + feelsTemp
-        }${signDegree}C, ${weatherDescription}`;
-      }
-    } else if (i === 0) {
+    if (i === 0) {
+      tempHour = hours;
+      formatted += `\n   ${hours}:${minutes}0, ${
+        currentTemp > 0 ? "+" + currentTemp : "-" + currentTemp
+      }${signDegree}C, ощущается: ${
+        feelsTemp > 0 ? "+" + feelsTemp : "-" + feelsTemp
+      }${signDegree}C, ${weatherDescription}`;
+    }
+
+    const diff = Math.abs(hours - tempHour);
+    const interv = diff > hourInterval ? MAX_HOUR_VALUE - diff : diff;
+    if (interv === hourInterval) {
       tempHour = hours;
       formatted += `\n   ${hours}:${minutes}0, ${
         currentTemp > 0 ? "+" + currentTemp : "-" + currentTemp
@@ -70,9 +70,10 @@ export const getFormattedData = (
 export const readData = (bank: string): FileContent => {
   let fileRoute = "";
 
-  if (bank.localeCompare("privat") === 0) {
+  if (bank === "privat") {
     fileRoute += STORAGE_PRIVAT;
-  } else if (bank.localeCompare("monobank") === 0) {
+  }
+  if (bank === "monobank") {
     fileRoute += STORAGE_MONOBANK;
   }
 
@@ -96,10 +97,11 @@ export const rewriteData = async (
   let fileRoute: string;
   let bankUrl: string = "";
 
-  if (bank.localeCompare("privat") === 0) {
+  if (bank === "privat") {
     fileRoute = STORAGE_PRIVAT;
     bankUrl += RATE_URL_PRIVAT;
-  } else if (bank.localeCompare("monobank") === 0) {
+  }
+  if (bank === "monobank") {
     fileRoute = STORAGE_MONOBANK;
     bankUrl += RATE_URL_MONOBANK;
   }
@@ -110,7 +112,7 @@ export const rewriteData = async (
       const newDate = new Date();
       let obj = {} as BankResponse;
 
-      if (bank.localeCompare("privat") === 0) {
+      if (bank === "privat") {
         const { buy, sale } = response.data[0] as ResponsePrivatApi;
         obj = {
           bank,
@@ -118,7 +120,8 @@ export const rewriteData = async (
           sale,
           recordTime: newDate.getTime(),
         };
-      } else if (bank.localeCompare("monobank") === 0) {
+      }
+      if (bank === "monobank") {
         const { rateBuy, rateSell } = response.data[0] as ResponseMonoApi;
         obj = {
           bank,

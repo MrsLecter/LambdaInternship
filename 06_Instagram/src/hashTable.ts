@@ -2,7 +2,7 @@ const crc32 = require("crc-32");
 const fs = require("fs");
 const path = require("path");
 
-import { intersectionTable, uniqueTable } from "./types/types";
+import { IntersectionTable, UniqueTable } from "./types/types";
 
 const ALL_FILES_AMOUNT = 20;
 
@@ -24,7 +24,7 @@ const getAllFiles = (filesAmount = 1): string[] => {
 };
 
 const getUniqueValues = (filesData: string[]): string => {
-  let hTable = {} as uniqueTable;
+  let hTable = {} as UniqueTable;
 
   for (let file of filesData) {
     for (let word of file) {
@@ -41,7 +41,7 @@ const getIntersection = (
   filesData: string[],
   filesNumber: number = 20,
 ): string => {
-  let hTable = {} as intersectionTable;
+  let hTable = {} as IntersectionTable;
   const filesAmount = filesData.length;
   let rezArr = [];
   let fileIndex = 0;

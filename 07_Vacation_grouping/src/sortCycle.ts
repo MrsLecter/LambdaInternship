@@ -1,10 +1,10 @@
 const vacationShedule = require("../vacationShedule.json");
-import { vacationType, sheduleType } from "./types";
+import { VacationType, SheduleType } from "./types";
 
 const getShortedVacationShedule = (
-  vacationShedule: vacationType[],
-): sheduleType => {
-  let shortedVacationShedule: sheduleType = {};
+  vacationShedule: VacationType[],
+): SheduleType => {
+  const shortedVacationShedule: SheduleType = {};
   for (let vacationPeriod of vacationShedule) {
     if (!shortedVacationShedule[vacationPeriod.user._id]) {
       shortedVacationShedule[vacationPeriod.user._id] = {
@@ -17,7 +17,8 @@ const getShortedVacationShedule = (
           },
         ],
       };
-    } else if (shortedVacationShedule[vacationPeriod.user._id]) {
+    }
+    if (shortedVacationShedule[vacationPeriod.user._id]) {
       shortedVacationShedule[vacationPeriod.user._id].weekendDates.push({
         startDate: vacationPeriod.startDate,
         endDate: vacationPeriod.endDate,

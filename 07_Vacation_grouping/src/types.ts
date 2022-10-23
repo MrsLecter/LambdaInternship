@@ -1,8 +1,8 @@
-export type sheduleType = {
-  [index: number]: shortedSheduleObject;
+export type SheduleType = {
+  [index: number]: ShortedSheduleObject;
 };
 
-export type shortedSheduleObject = {
+export type ShortedSheduleObject = {
   userId: number;
   name: string;
   weekendDates: {
@@ -11,7 +11,7 @@ export type shortedSheduleObject = {
   }[];
 };
 
-export type vacationType = {
+export type VacationType = {
   startDate: string;
   endDate: string;
   user: {

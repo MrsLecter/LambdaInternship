@@ -1,12 +1,12 @@
 import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
 import { getDeadline, getCalculatedTimeMs } from "../utils/deadline";
-import { mime, lang } from "../types/types";
+import { Mime, Lang } from "../types/types";
 import { getCost } from "../utils/cost";
 
 type inputType = {
-  language: lang;
-  mimetype: mime;
+  language: Lang;
+  mimetype: Mime;
   count: number;
 };
 let inputObj: inputType;

@@ -1,9 +1,9 @@
-import { LangCost, mime, lang } from "../types/types";
+import { LangCost, Mime, Lang } from "../types/types";
 
 export const getCost = (
-  language: lang,
+  language: Lang,
   signCount: number,
-  docType: mime,
+  docType: Mime,
 ): number => {
   let signCost =
     signCount * LangCost[language] < LangCost[language] * 1000

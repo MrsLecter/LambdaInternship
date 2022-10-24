@@ -17,11 +17,12 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 try {
-  app.listen(PORT);
-  console.log(
-    `Server is listening in port ${PORT}. Use rout: ".../correctarium/"`,
-  );
+  app.listen(PORT, () => {
+    console.info(
+      `Express server started on port ${PORT}. Use rout: ".../correctarium/"`,
+    );
+  });
 } catch (e) {
-  console.log(e);
+  console.error(e);
   throw new Error("An Error occured");
 }

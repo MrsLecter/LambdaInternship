@@ -10,5 +10,5 @@ export enum LangTime {
   "en" = 333,
 }
 
-export type mime = "none" | "doc" | "docx" | "rtf" | "other";
-export type lang = "ua" | "ru" | "en";
+export type Mime = "none" | "doc" | "docx" | "rtf" | "other";
+export type Lang = "ua" | "ru" | "en";

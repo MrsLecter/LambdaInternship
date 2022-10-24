@@ -1,10 +1,10 @@
 import { toCalculateDeadline } from "./utils";
-import { LangTime, mime, lang } from "../types/types";
+import { LangTime, Mime, Lang } from "../types/types";
 
 export const getCalculatedTimeMs = (
-  language: lang,
+  language: Lang,
   signCount: number,
-  docType: mime,
+  docType: Mime,
 ): number => {
   const startTimeMs = 30 * 60 * 1000;
   const minTimeMs = 60 * 60 * 1000;
@@ -22,9 +22,9 @@ export const getCalculatedTimeMs = (
 };
 
 export const getDeadline = (
-  language: lang,
+  language: Lang,
   signCount: number,
-  docType: mime,
+  docType: Mime,
   orderDate: Date,
 ): Date => {
   const timeForWork = getCalculatedTimeMs(language, signCount, docType);

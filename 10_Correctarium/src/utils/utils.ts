@@ -10,7 +10,8 @@ export const addWorkingHours = (
       if (ifCurrentDayInRange(date) && !ifCurrentHourInRange(date)) {
         if (date.getHours() < 5) {
           setRightHours(date);
-        } else if (date.getHours() >= 19) {
+        }
+        if (date.getHours() >= 19) {
           getNextDay(date);
         }
       }
@@ -35,7 +36,8 @@ export const addWorkingHours = (
         demandedWorkingHour -= workingTimeRange;
         getNextDay(date);
         setRightHours(date);
-      } else if (workingTimeRange >= demandedWorkingHour) {
+      }
+      if (workingTimeRange >= demandedWorkingHour) {
         date.setMilliseconds(demandedWorkingHour);
         completeFlag = true;
       }

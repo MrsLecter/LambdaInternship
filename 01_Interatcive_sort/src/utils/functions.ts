@@ -20,13 +20,23 @@ export const getASCSortLetterNumber = (arr: string[]): string[] => {
   return words.sort((a, b) => a.length - b.length);
 };
 
-export const getUniqueWords = (arr: string[]): string[] => {
-  const words = arr.filter((item) => isNaN(parseInt(item)));
-  const uniq_words = new Set(words);
-  return Array.from(uniq_words);
-};
-
 export const getUniqueAll = (arr: string[]): string[] => {
-  const uniq = new Set(arr);
-  return Array.from(uniq);
+  const words = arr.filter((item) => parseInt(item) || item.length > 0);
+  console.log(words);
+  const map = new Map();
+  for (let word of words) {
+    if (map.has(word)) {
+      map.set(word, map.get(word) + 1);
+    }
+    if (!map.has(word)) {
+      map.set(word, 1);
+    }
+  }
+  const uniq_words = [];
+  for (const word of Array.from(map)) {
+    if (word[1] === 1) {
+      uniq_words.push(word[0]);
+    }
+  }
+  return uniq_words;
 };

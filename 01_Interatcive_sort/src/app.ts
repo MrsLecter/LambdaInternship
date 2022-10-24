@@ -37,7 +37,7 @@ process.stdin.on("readable", () => {
       break;
     case "5":
       process.stdout.write(">>5\n");
-      process.stdout.write(func.getUniqueWords(data) + "\n");
+      process.stdout.write(func.getUniqueAll(data) + "\n");
       process.stdout.write(say.HELLO);
       break;
     case "6":

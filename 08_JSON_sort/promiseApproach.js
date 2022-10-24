@@ -3,7 +3,7 @@ const { getPropValue } = require("./src/utils");
 const axios = require("axios").default;
 
 const getPromiseArr = (urls) => {
-  return urls.map(
+  const promises = urls.map(
     async (url) =>
       await axios
         .get(url, {

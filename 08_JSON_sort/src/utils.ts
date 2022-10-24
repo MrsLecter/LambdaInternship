@@ -9,9 +9,8 @@ export const getPropValue = (responseObj: Object): string => {
   if (result !== null) {
     const value = result[0].substring(9);
     return value[0].toUpperCase() + value.substring(1);
-  } else {
-    return "no matches found!";
   }
+  return "no matches found!";
 };
 
 export const getFormattedResponse = async (

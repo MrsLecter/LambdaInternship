@@ -1,7 +1,7 @@
 const vacationShedule = require("../vacationShedule.json");
 import { VacationType, SheduleType } from "./types";
 
-const getShortedVacationShedule = (
+export const getShortedVacationSheduleCycle = (
   vacationShedule: VacationType[],
 ): SheduleType => {
   const shortedVacationShedule: SheduleType = {};
@@ -27,8 +27,9 @@ const getShortedVacationShedule = (
   }
   return Object.values(shortedVacationShedule);
 };
-const start = new Date().getTime();
-console.log(getShortedVacationShedule(vacationShedule));
-const end = new Date().getTime();
 
-console.log(`Time spend: ${end - start} ms`); //10ms-16ms
+// const start = new Date().getTime();
+// console.log(getShortedVacationSheduleCycle(vacationShedule));
+// const end = new Date().getTime();
+
+// console.log(`Time spend: ${end - start} ms`); //10ms-16ms

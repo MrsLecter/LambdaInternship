@@ -1,20 +1,21 @@
-const { URL } = require("./data/listOfUrls");
-const { getPropValue } = require("./src/utils");
+const { URL } = require("./dist/data/listOfUrls");
+const { getPropValue } = require("./dist/utils");
 const axios = require("axios").default;
 
 const getPromiseArr = (urls) => {
-  const promises = urls.map(
-    async (url) =>
-      await axios
-        .get(url, {
+  try {
+    const promises = urls.map(
+      async (url) =>
+        await axios.get(url, {
           validateStatus: function (status) {
             return status < 400;
           },
-        })
-        .catch((error) => {
-          throw Error(error.message);
         }),
-  );
+    );
+    return promises;
+  } catch (error) {
+    throw new Error(err.message);
+  }
 };
 
 const retryAndReturnOnlyFulfilled = async (failedUrls) => {
@@ -22,7 +23,7 @@ const retryAndReturnOnlyFulfilled = async (failedUrls) => {
     const failedPromises = await getPromiseArr(failedUrls);
     const results = await Promise.allSettled(failedPromises);
     const fulfilledPromises = results.filter(
-      (result) => result.status.localeCompare("fulfilled") === 0,
+      (result) => result.status === "fulfilled",
     );
     if (fulfilledPromises.length) {
       return fulfilledPromises;
@@ -64,7 +65,7 @@ const runPromises = async (arrayOfPromises, urls) => {
       }
     }
 
-    console.log(
+    console.error(
       `Error! ${rejectedPromisesAmount} promise(-s) rejected ! Url(-s): ${restUrls}`,
     );
     return fulfilledPromises;
@@ -80,9 +81,7 @@ const getFormattedResponse = (responsesArr) => {
       return `Значений True: ${counter.true}  Значений False: ${counter.false}`;
     }
     const isDone = getPropValue(response.value.data);
-    isDone.localeCompare("True") === 0
-      ? (counter.true += 1)
-      : (counter.false += 1);
+    isDone === "True" ? (counter.true += 1) : (counter.false += 1);
     return `${response.value.config.url}: isDone - ${isDone}`;
   });
 };
@@ -95,4 +94,4 @@ const getRequest = async (urls) => {
 
 getRequest(URL)
   .then((data) => console.log(data))
-  .catch((err) => console.log(err));
+  .catch((err) => console.error(err));

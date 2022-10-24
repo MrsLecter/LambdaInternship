@@ -6,7 +6,9 @@ import {
   getDataTable,
 } from "./utils/handlers";
 
-import { TABLE_PATH } from "./utils/constants";
+import { TABLE_PATH } from "./constants";
+
+const PORT = 3001;
 
 const app = express();
 
@@ -32,8 +34,8 @@ app.get("/whereiam", (request: Request, response: Response) => {
   });
 });
 
-app.listen(3000);
-
-console.log(
-  "Server running on http://127.0.0.1:3000/. Run ngrok: ngrok http 3000 ",
-);
+app.listen(PORT, () => {
+  console.info(
+    `Server running on http://127.0.0.1:${PORT}/. Run ngrok: ngrok http ${PORT}`,
+  );
+});

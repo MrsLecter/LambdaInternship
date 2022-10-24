@@ -1,4 +1,4 @@
-import { NORMAL_POWER } from "./constants";
+import { NORMAL_POWER } from "../constants";
 const fs = require("fs");
 
 export const toReturnLocationByIp = (
@@ -36,6 +36,5 @@ export const getDataTable = (tablePath: string): number[][] => {
       let row = item.split(",");
       return [parseInt(row[0]), parseInt(row[1]), row[3]];
     });
-  console.log(arrData);
   return arrData;
 };

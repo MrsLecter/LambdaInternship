@@ -6,7 +6,7 @@ import { IntersectionTable, UniqueTable } from "./types/types";
 
 const ALL_FILES_AMOUNT = 20;
 
-const getAllFiles = (filesAmount = 1): string[] => {
+export const getAllFiles = (filesAmount = 1): string[] => {
   let allFiles = [] as string[];
   try {
     for (let file_number = 0; file_number < filesAmount; file_number++) {
@@ -23,7 +23,7 @@ const getAllFiles = (filesAmount = 1): string[] => {
   }
 };
 
-const getUniqueValues = (filesData: string[]): string => {
+export const getUniqueValues = (filesData: string[]): string => {
   let hTable = {} as UniqueTable;
 
   for (let file of filesData) {
@@ -37,7 +37,7 @@ const getUniqueValues = (filesData: string[]): string => {
   return `Unique word combinations: ${hTableLength} in ${filesData.length} files`;
 };
 
-const getIntersection = (
+export const getIntersection = (
   filesData: string[],
   filesNumber: number = 20,
 ): string => {

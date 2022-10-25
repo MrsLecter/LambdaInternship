@@ -1,6 +1,8 @@
 import inquirer from "inquirer";
-import * as access from "./utils/dataAccess.js";
-import * as utils from "./utils/utils.js";
+import * as access from "./dataHandlers/dataAccess.js";
+import * as utils from "./dataHandlers/dataHandler.js";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 interface Answers extends Record<string, any> {}
 

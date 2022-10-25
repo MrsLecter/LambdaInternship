@@ -1,6 +1,6 @@
 const mongo = require("mongodb");
 
-const { getDB } = require("./database");
+const { getDB } = require("./databaseHendler");
 
 const saveUser = async (obj) => {
   const db = getDB();

@@ -15,7 +15,7 @@ export const checkData = (person: Answers): Boolean => {
 
 export const addPerson = (persons: Answers[]): void => {
   let currentPersonsData: Answers[] = JSON.parse(readFile() as string);
-  if (persons.length > 0) {
+  if (persons.length > 0 && persons[0].name) {
     persons.forEach((person: Answers) => {
       if (checkData(person)) {
         person.name = person.name.toLowerCase();

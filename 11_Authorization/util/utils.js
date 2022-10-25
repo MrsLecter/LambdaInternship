@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { v4: uuid } = require("uuid");
-const { saveTokens } = require("./dataAccess");
+const { saveTokens } = require("../dataHandlers/dataAccess");
 require("dotenv").config();
 
 const getRandomTTL = () => {

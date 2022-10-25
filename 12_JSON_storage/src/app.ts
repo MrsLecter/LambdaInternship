@@ -20,9 +20,10 @@ app.use(<ErrorRequestHandler>((err, req, res, next) => {
 }));
 
 try {
-  app.listen(PORT);
-  console.log(`Server is listening in port ${PORT}`);
+  app.listen(PORT, () => {
+    console.info(`Express server started on port ${PORT}`);
+  });
 } catch (e) {
-  console.log(e);
+  console.error(e);
   throw new Error("An Error occured");
 }

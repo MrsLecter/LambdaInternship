@@ -1,4 +1,4 @@
-import * as say from "./utils/constants";
+import * as say from "./constants";
 import * as func from "./utils/functions";
 
 let currentData: string;

@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import { readFileSync, writeFile } from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
 
@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 export const readFile = (): string | Buffer => {
   let persons: string | Buffer;
   try {
-    persons = fs.readFileSync(path.join(__dirname, process.env.FILE_PATH), {
+    persons = readFileSync(path.join(__dirname, process.env.FILE_PATH), {
       encoding: "utf8",
     });
     return persons;
@@ -18,11 +18,7 @@ export const readFile = (): string | Buffer => {
 };
 
 export const writeData = (person: string): void => {
-  fs.writeFile(
-    path.join(__dirname, process.env.FILE_PATH),
-    person,
-    (err: any) => {
-      if (err) throw Error((err as Error).message);
-    },
-  );
+  writeFile(path.join(__dirname, process.env.FILE_PATH), person, (err: any) => {
+    if (err) throw Error((err as Error).message);
+  });
 };

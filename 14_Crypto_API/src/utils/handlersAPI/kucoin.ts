@@ -25,10 +25,10 @@ module.exports = new Promise<object>(async (resolve, reject) => {
     response = null;
     if (error instanceof Error) {
       if (axios.isAxiosError(error)) {
-        console.log("error message: ", error.message);
+        console.error("error message: ", error.message);
         throw new Error(error.message);
       } else {
-        console.log("unexpected error: ", error);
+        console.error("unexpected error: ", error);
         throw new Error("An unexpected error occurred");
       }
     }

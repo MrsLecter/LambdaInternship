@@ -4,7 +4,11 @@ const jwt = require("jsonwebtoken");
 const url = require("url");
 require("dotenv").config();
 
-const { saveUser, findUserByEmail, findTokens } = require("../util/dataAccess");
+const {
+  saveUser,
+  findUserByEmail,
+  findTokens,
+} = require("../dataHandlers/dataAccess");
 const { getTokens } = require("../util/utils");
 
 exports.userReg = (req, res, next) => {
@@ -36,7 +40,6 @@ exports.userReg = (req, res, next) => {
     })
     .catch((err) => {
       const error = new Error(err);
-      error.httpStatusCode(500);
       return next(error);
     });
 };
@@ -65,7 +68,6 @@ exports.logIn = (req, res, next) => {
     })
     .catch((err) => {
       const error = new Error(err);
-      error.httpStatusCode(500);
       return next(error);
     });
 };

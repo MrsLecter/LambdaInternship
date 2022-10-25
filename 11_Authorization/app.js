@@ -1,5 +1,5 @@
 const bodyParser = require("body-parser");
-const mongoConnect = require("./util/database").mongoConnect;
+const mongoConnect = require("./dataHandlers/databaseHendler").mongoConnect;
 const express = require("express");
 const app = express();
 
@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 app.use(authRout);
 
 app.use((error, req, res, next) => {
-  res.status(500).json("500", { message: "Internal Server Error" });
+  res.status(500).json({ message: "Internal Server Error" });
 });
 
 try {

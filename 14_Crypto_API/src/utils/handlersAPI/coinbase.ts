@@ -10,16 +10,15 @@ const promise_list = POPULAR_CURRENCY.map((currency) => {
       );
       let filtered = { [currency]: (+response.data.data.rates.USD).toFixed(5) };
       resolve(filtered);
-    } catch (error) {
+    } catch (error: any) {
       response = null;
       if (error instanceof Error) {
         if (axios.isAxiosError(error)) {
-          console.log("error message: ", error.message);
+          console.error("error message: ", error.message);
           throw new Error(error.message);
-        } else {
-          console.log("unexpected error: ", error);
-          throw new Error("An unexpected error occurred");
         }
+        console.error("unexpected error: ", error);
+        throw new Error("An unexpected error occurred");
       }
     }
   });

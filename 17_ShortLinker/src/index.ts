@@ -30,8 +30,9 @@ app.use(<ErrorRequestHandler>((err, req, res, next) => {
 }));
 
 try {
-  app.listen(PORT);
-  console.log(`Server is listening in port ${PORT}`);
+  app.listen(PORT, () => {
+    console.log(`Server is listening in port ${PORT}`);
+  });
 } catch (e) {
   console.log(e);
   throw new Error("An Error occured in app.listen");

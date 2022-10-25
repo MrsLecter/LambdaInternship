@@ -1,26 +1,18 @@
 const axios = require("axios").default;
 import { POPULAR_CURRENCY } from "../constants";
+import { ObjectCurrencyCoinmarket } from "../../interfaces/interfaces";
 require("dotenv").config();
 
-interface objectCurrency {
-  symbol: string;
-  quote: {
-    USD: {
-      price: number;
-    };
-  };
-}
-
 const getFilteredData = (
-  data: objectCurrency[],
+  data: ObjectCurrencyCoinmarket[],
   required_currency: string[],
 ): {
   [index: string]: any;
 } => {
   let filtered: { [index: string]: any } = {};
-  for (let i = 0; i < data.length; i++) {
-    if (required_currency.includes(data[i].symbol)) {
-      filtered[data[i].symbol] = data[i].quote.USD.price.toFixed(5);
+  for (let currencyData of data) {
+    if (required_currency.includes(currencyData.symbol)) {
+      filtered[currencyData.symbol] = currencyData.quote.USD.price.toFixed(5);
     }
   }
   return filtered;
@@ -41,16 +33,14 @@ module.exports = new Promise<object>(async (resolve, reject) => {
     response = null;
     if (error instanceof Error) {
       if (axios.isAxiosError(error)) {
-        console.log("error message: ", error.message);
+        console.error("error message: ", error.message);
         throw new Error(error.message);
-      } else {
-        console.log("unexpected error: ", error);
-        throw new Error("An unexpected error occurred");
       }
+      console.error("unexpected error: ", error);
+      throw new Error("An unexpected error occurred");
     }
   }
   if (response) {
-    // success
     const filtered = getFilteredData(response.data.data, POPULAR_CURRENCY);
     resolve(filtered);
   }

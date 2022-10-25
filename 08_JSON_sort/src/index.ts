@@ -20,7 +20,7 @@ const handleUrl = async (url: string, counter = 1): Promise<string> => {
   }
 };
 
-const runQueue = async (URLS: string[]): Promise<string[]> => {
+export const runQueue = async (URLS: string[]): Promise<string[]> => {
   let arr = [] as string[];
   for (const url of URLS) {
     await handleUrl(url)

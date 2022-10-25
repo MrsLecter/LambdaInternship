@@ -16,7 +16,7 @@ export const getСustom = (req: Request, res: Response, next: NextFunction) => {
         res.status(400).json({ message: "Page not foud" });
       }
     })
-    .catch((error) => {
+    .catch((error: any) => {
       throw new Error(error);
     });
 };
@@ -49,7 +49,7 @@ export const deleteCustom = (
       }
       res.status(200).json({ message: "Successfully deleted" });
     })
-    .catch((error) => {
+    .catch((error: any) => {
       throw new Error((error as Error).message);
     });
 };

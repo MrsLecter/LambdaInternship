@@ -69,7 +69,7 @@ export const deleteByRout = async (routName: string) => {
     });
     await client.close();
     return objectRout;
-  } catch (err) {
+  } catch (err: any) {
     throw Error((err as Error).message);
   }
 };

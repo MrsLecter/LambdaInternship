@@ -1,10 +1,10 @@
 const axios = require("axios").default;
 import { POPULAR_CURRENCY } from "../constants";
-import { ObjectCurrencyCoinmarket } from "../../interfaces/interfaces";
+import { ObjectCurrencyCoinstats } from "../interfaces/interfaces";
 require("dotenv").config();
 
 const getFilteredData = (
-  data: ObjectCurrencyCoinmarket[],
+  data: ObjectCurrencyCoinstats[],
   required_currency: string[],
 ): {
   [index: string]: any;
@@ -12,7 +12,7 @@ const getFilteredData = (
   let filtered: { [index: string]: any } = {};
   for (let currencyData of data) {
     if (required_currency.includes(currencyData.symbol)) {
-      filtered[currencyData.symbol] = currencyData.quote.USD.price.toFixed(5);
+      filtered[currencyData.symbol] = currencyData.price.toFixed(5);
     }
   }
   return filtered;
@@ -22,12 +22,7 @@ let response = null;
 module.exports = new Promise<object>(async (resolve, reject) => {
   try {
     response = await axios.get(
-      "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest",
-      {
-        headers: {
-          "X-CMC_PRO_API_KEY": process.env.COINMARKET_TOKEN,
-        },
-      },
+      "https://api.coinstats.app/public/v1/coins?skip=0&limit=25&currency=USD",
     );
   } catch (error) {
     response = null;
@@ -41,7 +36,7 @@ module.exports = new Promise<object>(async (resolve, reject) => {
     }
   }
   if (response) {
-    const filtered = getFilteredData(response.data.data, POPULAR_CURRENCY);
+    const filtered = getFilteredData(response.data.coins, POPULAR_CURRENCY);
     resolve(filtered);
   }
 });

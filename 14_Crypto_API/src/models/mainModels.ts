@@ -1,9 +1,17 @@
-import { db } from "../utils/dbInit";
-import { admissibleMarkets, ONE_HOUR } from "../utils/constants";
+import { db } from "../databaseHandler/dbInit";
+import { admissibleMarkets, ONE_HOUR } from "../constants";
+import {
+  getCurrentCurrencyQuery,
+  getAllFromPeriodQuery,
+} from "../dbQueryString";
+import * as path from "path";
 
 export const getCurrentMarket = async (market: string) => {
   if (admissibleMarkets.includes(market)) {
-    return await require("../utils/handlersAPI/" + market);
+    return await require(path.join(
+      __dirname,
+      "../utils/handlersAPI/" + market,
+    ));
   } else {
     return {
       message:
@@ -19,23 +27,12 @@ export const getCurrentCurrency = async (
   const periodAccepted = period === 30 ? 30 : period * ONE_HOUR;
   let date = new Date();
   date.setMinutes(date.getMinutes() - periodAccepted);
-
-  return await db.execute(
-    `SELECT ${currency} FROM currency WHERE timestamp > '${date
-      .toJSON()
-      .slice(0, 19)
-      .replace("T", " ")}';`,
-  );
+  return await db.execute(getCurrentCurrencyQuery(currency, date));
 };
 
 export const getAllFromPeriod = async (period: number = 30) => {
   const periodAccepted = period == 30 ? 30 : period * 60;
   let date = new Date();
   date.setMinutes(date.getMinutes() - periodAccepted);
-  return await db.execute(
-    `SELECT * FROM currency WHERE timestamp > '${date
-      .toJSON()
-      .slice(0, 19)
-      .replace("T", " ")}';`,
-  );
+  return await db.execute(getAllFromPeriodQuery(date));
 };

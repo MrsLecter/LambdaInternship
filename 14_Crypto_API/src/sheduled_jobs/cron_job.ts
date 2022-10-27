@@ -1,7 +1,7 @@
 import cron from "node-cron";
-import { db } from "../utils/dbInit";
+import { db } from "../databaseHandler/dbInit";
 import { getAverage } from "../utils/utils";
-import { TWENTY_FOUR_HOURS } from "../utils/constants";
+import { TWENTY_FOUR_HOURS } from "../constants";
 
 const coinMarketArr = ["coinbase", "coinstats", "kucoin", "coinpaprika"].map(
   (item) => require("../utils/handlersAPI/" + item),

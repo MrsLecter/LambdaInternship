@@ -26,4 +26,4 @@ const promise_list = POPULAR_CURRENCY.map((currency) => {
 
 module.exports = Promise.all(promise_list)
   .then((response) => Object.assign({}, ...response))
-  .catch((err) => console.log(err));
+  .catch((err) => console.error(err));

@@ -1,4 +1,4 @@
-export type objectRate = {
+export type ObjectRate = {
   BTC: number;
   ETH: number;
   USDT: number;

@@ -5,7 +5,7 @@ import {
   addToFavourite,
   deleteFromFavourites,
   showAllFavourite,
-} from "./utils/dbFunctions";
+} from "./dbFunctions";
 import { getCurrencyList, getStrinFromList } from "./utils/utils";
 
 const token = process.env.BOT_TOKEN;
@@ -40,18 +40,20 @@ const start = () => {
       .catch((err) => console.log(err));
   });
 
-  bot.onText(/\/addToFavourite_([A-Z]{3,5})/, async (msg, match) => {
+  bot.onText(/\/addToFavourite_([A-Z]{3,5})/, async (msg, match_curr) => {
     const chatId = msg.chat.id;
-    const resp = match[1];
+    if (!match_curr) throw Error("Empty currency name");
+    const resp = match_curr[1];
 
     addToFavourite(resp, chatId)
       .then((data) => bot.sendMessage(chatId, `${resp} added to favourite`))
       .catch((err) => console.log(err));
   });
 
-  bot.onText(/\/removeFromFavourite_([A-Z]{3,5})/, async (msg, match) => {
+  bot.onText(/\/removeFromFavourite_([A-Z]{3,5})/, async (msg, match_curr) => {
     const chatId = msg.chat.id;
-    const resp = match[1];
+    if (!match_curr) throw Error("Empty currency name");
+    const resp = match_curr[1];
 
     deleteFromFavourites(resp, chatId)
       .then((data) =>
@@ -91,10 +93,11 @@ const start = () => {
       });
   });
 
-  bot.onText(/\/[A-Z]{3,5}/, async (msg, match) => {
+  bot.onText(/\/[A-Z]{3,5}/, async (msg, match_curr) => {
     const chatId = msg.chat.id;
-    const resp = match[1];
-    const currentCyrrency = match[0].slice(1);
+    if (!match_curr) throw Error("Empty currency name");
+    const resp = match_curr[1];
+    const currentCyrrency = match_curr[0].slice(1);
 
     showAllFavourite(chatId).then((favourite) => {
       const currencyList = getCurrencyList(favourite[0]);
@@ -122,6 +125,7 @@ const start = () => {
   });
 
   bot.on("callback_query", async (msg) => {
+    if (!msg.data || !msg.message) throw Error("Message data not found");
     const data = msg.data.split(" ");
     const chatId = msg.message.chat.id;
     axios
@@ -133,7 +137,7 @@ const start = () => {
         bot.sendMessage(
           chatId,
           `Currency ${currency} rate for period ${data[0]} ${
-            data[0] === 30 ? "minutes" : "hour(s)"
+            Number(data[0]) === 30 ? "minutes" : "hour(s)"
           }: $${price}`,
         );
       })

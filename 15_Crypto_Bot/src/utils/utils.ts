@@ -1,18 +1,18 @@
 export const getCurrencyList = (
   arr: { [currency: string]: string }[],
 ): string[] => {
-  if (arr.length === 0) {
+  if (!arr.length) {
     return ["Nothing"];
   }
   let currency: string[] = [];
   arr.forEach((obj) => {
-    currency.push(obj["currency"]);
+    currency.push(obj.currency);
   });
   return currency;
 };
 
 export const getStrinFromList = (list: string[]): string => {
-  if (list[0].localeCompare("Nothing") === 0) {
+  if (list[0] === "Nothing") {
     return "Your favourite list is empty!";
   }
   let str = "Your favourite currency: ";

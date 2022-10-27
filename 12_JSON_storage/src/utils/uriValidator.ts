@@ -1,8 +1,7 @@
 export const isValidParam = (rout: string): boolean => {
   const result = rout.match(/^[A-Za-z0-9]*$/);
-  if (result === null) {
+  if (!result) {
     return false;
-  } else {
-    return true;
   }
+  return true;
 };

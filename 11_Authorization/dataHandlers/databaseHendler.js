@@ -5,14 +5,16 @@ require("dotenv").config();
 let _db;
 
 const mongoConnect = (callback) => {
-  MongoClient.connect(process.env.MONGO_STR)
+  MongoClient.connect(
+    "mongodb+srv://guest:r4dRatalNHmznDqw@cluster0.2vrmo.mongodb.net/auth-db?retryWrites=true&w=majority",
+  )
     .then((client) => {
       console.log("MongoDB connected ... ");
       _db = client.db();
       callback(client);
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
       throw err;
     });
 };
@@ -24,5 +26,5 @@ const getDB = () => {
   throw "No database found!";
 };
 
-exports.mongoConnect = mongoConnect;
 exports.getDB = getDB;
+exports.mongoConnect = mongoConnect;

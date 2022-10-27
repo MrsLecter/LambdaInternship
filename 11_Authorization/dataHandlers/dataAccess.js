@@ -4,7 +4,6 @@ const { getDB } = require("./databaseHendler");
 
 const saveUser = async (obj) => {
   const db = getDB();
-  let dbOp;
   await db
     .collection("users")
     .insertOne(obj)

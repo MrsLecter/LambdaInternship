@@ -3,7 +3,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const url = require("url");
 require("dotenv").config();
-
 const {
   saveUser,
   findUserByEmail,
@@ -11,65 +10,49 @@ const {
 } = require("../dataHandlers/dataAccess");
 const { getTokens } = require("../util/utils");
 
-exports.userReg = (req, res, next) => {
+exports.userReg = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ errors: `Invalid value: ${errors.array()}` });
   }
-
-  const { email, password } = req.body;
-  let userObj;
-  findUserByEmail(email)
-    .then((user) => {
-      if (user) {
-        return res
-          .status(409)
-          .json({ message: "Conflict. User is already exists" });
-      } else {
-        return bcrypt.hash(password, 12).then((hashPasswd) => {
-          userObj = {
-            email: email,
-            password: hashPasswd,
-          };
-          saveUser(userObj);
-          return res
-            .status(201)
-            .json({ message: "User successfully registered" });
-        });
-      }
-    })
-    .catch((err) => {
-      const error = new Error(err);
-      return next(error);
+  try {
+    const { email, password } = req.body;
+    const userFromDb = await findUserByEmail(email);
+    if (userFromDb) {
+      return res
+        .status(409)
+        .json({ message: "Conflict. User is already exists" });
+    }
+    const hashFromPassword = await bcrypt.hash(password, 12);
+    saveUser({
+      email: email,
+      password: hashFromPassword,
     });
+    return res.status(201).json({ message: "User successfully registered" });
+  } catch (err) {
+    const error = new Error(err);
+    return next(error);
+  }
 };
 
-exports.logIn = (req, res, next) => {
-  let userLogin;
-  const params = url.parse(req.url, true).query;
-  const { email, password } = params;
-
-  findUserByEmail(email)
-    .then((user) => {
-      if (!user) {
-        res
-          .status(403)
-          .json({ " message": "Not found. Please, register first" });
-      }
-      bcrypt.compare(password, user.password).then((isMatch) => {
-        if (isMatch) {
-          return res
-            .status(202)
-            .json({ message: "Accepted", ...getTokens(user.email) });
-        } else {
-          return res.status(403).json({ message: "Forbidden. Incorrect data" });
-        }
-      });
-    })
-    .catch((err) => {
-      const error = new Error(err);
-      return next(error);
-    });
+exports.logIn = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const userFromDb = await findUserByEmail(email);
+    if (!userFromDb) {
+      res.status(403).json({ " message": "Not found. Please, register first" });
+    }
+    const isPasswordMatch = await bcrypt.compare(password, userFromDb.password);
+    if (isPasswordMatch) {
+      return res
+        .status(202)
+        .json({ message: "Accepted", ...getTokens(userFromDb.email) });
+    }
+    return res.status(403).json({ message: "Forbidden. Incorrect data" });
+  } catch (err) {
+    const error = new Error(err);
+    return next(error);
+  }
 };
 
 exports.getMe = (req, res, next) => {
@@ -84,24 +67,21 @@ exports.getMe = (req, res, next) => {
           username: decoded.email,
         },
       });
-    } else {
-      res.status(404).json({ message: "Page not found" });
     }
+    res.status(404).json({ message: "Page not found" });
   } catch (err) {
     res.status(401).json({ " message": "Unauthorised" });
   }
 };
 
-exports.refresh = (req, res, next) => {
+exports.refresh = async (req, res, next) => {
   const token = req.headers.authorization.split(" ")[1];
-  findTokens().then((data) => {
-    if (data["refreshToken"].localeCompare(token) === 0) {
-      return res.status(202).json({
-        message: "New refresh token received",
-        ...getTokens(data["email"]),
-      });
-    } else {
-      return res.status(404).json({ message: "Not found. Incorrect data" });
-    }
-  });
+  const findToken = await findTokens();
+  if (findToken.refreshToken === token) {
+    return res.status(202).json({
+      message: "New refresh token received",
+      ...getTokens(findToken.email),
+    });
+  }
+  return res.status(404).json({ message: "Not found. Incorrect data" });
 };

@@ -11,14 +11,14 @@ export const toReturnLocationByIp = (
     let mid = Math.floor((start + end) / 2);
     if (ipTable[mid][0] <= userIp && ipTable[mid][1] >= userIp)
       return ipTable[mid];
-    else if (ipTable[mid][0] < userIp) start = mid + 1;
+    if (ipTable[mid][0] < userIp) start = mid + 1;
     else end = mid - 1;
   }
   return [];
 };
 
 export const toConvertIPtoNumber = (ip: string): number => {
-  let arr = ip.split(".");
+  const arr = ip.split(".");
   let number =
     parseInt(arr[0]) * NORMAL_POWER ** 3 +
     parseInt(arr[1]) * NORMAL_POWER ** 2 +

@@ -8,7 +8,7 @@ import {
 
 import { TABLE_PATH } from "./constants";
 
-const PORT = 3001;
+const PORT = 3000;
 
 const app = express();
 

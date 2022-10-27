@@ -12,3 +12,9 @@ export enum LangTime {
 
 export type Mime = "none" | "doc" | "docx" | "rtf" | "other";
 export type Lang = "ua" | "ru" | "en";
+
+export type InputType = {
+  language: Lang;
+  mimetype: Mime;
+  count: number;
+};

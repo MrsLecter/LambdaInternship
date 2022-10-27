@@ -1,6 +1,5 @@
 import express from "express";
 import { Request, Response, NextFunction } from "express";
-import path from "path";
 import bodyParser from "body-parser";
 import mainRoute from "./routes/main";
 

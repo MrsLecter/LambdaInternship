@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var express_1 = require("express");
+var mainControllers_1 = require("../controllers/mainControllers");
+var router = (0, express_1.Router)();
+router.get("/", mainControllers_1.startPage);
+router.get("/period/:period", mainControllers_1.getDataForCertainPeriod);
+router.get("/currencies/:currency", mainControllers_1.getDataForCertainCurrency);
+router.get("/currencies/:currency/:period", mainControllers_1.getDataForCertainCurrency);
+router.get("/markets/:market", mainControllers_1.getDataForCertainMarket);
+exports.default = router;

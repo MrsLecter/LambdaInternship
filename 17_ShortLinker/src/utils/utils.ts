@@ -5,7 +5,7 @@ import {
   urlObjType,
   prettiedUrlObjType,
 } from "../types/types";
-import { LackOfDataError } from "./errorHandler";
+import { LackOfDataError } from "../errorHandlers/errorHandler";
 require("dotenv").config();
 
 export const isValidUrl = (url: string): boolean => {

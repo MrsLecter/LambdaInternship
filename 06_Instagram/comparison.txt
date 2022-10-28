@@ -1,0 +1,3 @@
+Approach/Method  | getUniqueValues | getIntersection(10) | getIntersection(20) |
+--------------------------------------------------------------------------------Custom hashTable |   822.061       |       1728.683      |        2142.502     |
+Map              |   665.278       |       2759.184      |        2929.122     |

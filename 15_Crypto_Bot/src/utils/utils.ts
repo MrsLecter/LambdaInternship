@@ -5,9 +5,9 @@ export const getCurrencyList = (
     return ["Nothing"];
   }
   let currency: string[] = [];
-  arr.forEach((obj) => {
+  for (let obj of arr) {
     currency.push(obj.currency);
-  });
+  }
   return currency;
 };
 
@@ -16,8 +16,8 @@ export const getStrinFromList = (list: string[]): string => {
     return "Your favourite list is empty!";
   }
   let str = "Your favourite currency: ";
-  list.forEach((item) => {
+  for (let item of list) {
     str += "\n/" + item;
-  });
+  }
   return str;
 };

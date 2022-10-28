@@ -1,4 +1,4 @@
-const vacationShedule = require("../vacationShedule.json");
+const vacationShedule = require("../data/vacationShedule.json");
 import { VacationType, SheduleType, ShortedSheduleObject } from "./types";
 
 export const getShortedVacationSheduleReduce = (

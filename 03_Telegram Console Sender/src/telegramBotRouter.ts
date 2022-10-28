@@ -76,9 +76,9 @@ class TelegramBotRoutes {
     });
 
     this.bot.on("callback_query", async (msg: TelegramBot.CallbackQuery) => {
-      if (msg.data === undefined) throw Error("Message data undefined!");
+      if (!msg.data) throw Error("Message data undefined!");
       const data = msg.data as MonoOrPrivatType;
-      if (msg.message === undefined) throw Error("Message undefined!");
+      if (!msg.message) throw Error("Message undefined!");
       const chatId = msg.message.chat.id;
       if (data?.length === 1) {
         console.log("url", API_WEATHER, "wait, it takes much time!");
@@ -87,7 +87,7 @@ class TelegramBotRoutes {
             const dataResponse: ApiWeatherData[] = response.data.list;
             this.bot.sendMessage(chatId, getFormattedData(dataResponse, +data));
           });
-        } catch (error) {
+        } catch (error: any) {
           throw Error((error as Error).message);
         }
       }
@@ -107,13 +107,13 @@ class TelegramBotRoutes {
               String(date.getMonth() + 1).padStart(2, "0") +
               "/" +
               date.getFullYear();
-            if (data.localeCompare("privat") === 0) {
+            if (data === "privat") {
               this.bot.sendMessage(
                 chatId,
                 `Bank: Privatbank\nCurrency: 🇺🇸 USD\nBuy : ${parsedData.buy}\nSale: ${parsedData.sale}\nTime: ${formatTime}`,
               );
             }
-            if (data.localeCompare("monobank") === 0) {
+            if (data === "monobank") {
               this.bot.sendMessage(
                 chatId,
                 `Bank: Monobank\nCurrency: 🇺🇸 USD\nBuy : ${parsedData.buy}\nSale: ${parsedData.sale}\nTime: ${formatTime}`,
@@ -132,12 +132,13 @@ class TelegramBotRoutes {
           String(date.getMonth() + 1).padStart(2, "0") +
           "/" +
           date.getFullYear();
-        if (data.localeCompare("privat") === 0) {
+        if (data === "privat") {
           this.bot.sendMessage(
             chatId,
             `Bank: Privatbank\nCurrency: 🇺🇸 USD\nBuy : ${parsedData.buy}\nSale: ${parsedData.sale}\nTime: ${formatTime}`,
           );
-        } else if (data.localeCompare("monobank") === 0) {
+        }
+        if (data === "monobank") {
           this.bot.sendMessage(
             chatId,
             `Bank: Monobank\nCurrency: 🇺🇸 USD\nBuy : ${parsedData.buy}\nSale: ${parsedData.sale}\nTime: ${formatTime}`,

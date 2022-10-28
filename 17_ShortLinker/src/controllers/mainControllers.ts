@@ -1,9 +1,9 @@
 import express, { Request, Response, NextFunction } from "express";
 import { isValidUrl, getPrettierUrls } from "../utils/utils";
 import { UrlsDb } from "../entity/Urls";
-import { AppDataSource } from "../data-source";
-import { LackOfDataError } from "../utils/errorHandler";
-import { findAllUrls } from "../utils/databaseHandlers";
+import { AppDataSource } from "../databaseHandler/data-source";
+import { LackOfDataError } from "../errorHandlers/errorHandler";
+import { findAllUrls } from "../databaseHandler/databaseHandlers";
 import jwt from "jsonwebtoken";
 import shortid from "shortid";
 
@@ -33,17 +33,14 @@ export const redirectUrl = async (
         url_shorted: req.params.address,
       });
       if (firstUrl === null) {
-        // AppDataSource.destroy();
         res
           .status(400)
           .json({ message: `Url [${req.params.address}] not found` });
       } else {
-        // AppDataSource.destroy();
         res.redirect(firstUrl.url);
       }
     })
-    .catch((err) => {
-      // AppDataSource.destroy();
+    .catch((err: any) => {
       const error = new Error((err as Error).message);
       return next(error);
     })
@@ -68,10 +65,8 @@ export const receiveUrl = async (
       urlDb.url = req.body.url;
       urlDb.url_shorted = shortedUrl;
       await AppDataSource.manager.save(urlDb);
-      // AppDataSource.destroy();
     })
-    .catch((err) => {
-      // AppDataSource.destroy();
+    .catch((err: any) => {
       const error = new Error((err as Error).message);
       return next(error);
     })
@@ -103,8 +98,7 @@ export const showAllShortedUrls = async (
         urls: getPrettierUrls(urls),
       });
     })
-    .catch((err) => {
-      // AppDataSource.destroy();
+    .catch((err: any) => {
       const error = new Error((err as Error).message);
       return next(error);
     })

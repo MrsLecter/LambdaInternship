@@ -1,5 +1,3 @@
-import internal from "stream";
-
 declare global {
   namespace NodeJS {
     interface ProcessEnv {

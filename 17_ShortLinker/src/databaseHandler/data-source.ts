@@ -1,8 +1,8 @@
 require("dotenv").config();
 import { DataSource, DataSourceOptions } from "typeorm";
-import { TokensDb } from "./entity/Tokens";
-import { UrlsDb } from "./entity/Urls";
-import { AuthDb } from "./entity/User";
+import { TokensDb } from "../entity/Tokens";
+import { UrlsDb } from "../entity/Urls";
+import { AuthDb } from "../entity/User";
 
 const options: DataSourceOptions = {
   type: "mysql",

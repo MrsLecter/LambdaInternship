@@ -2,21 +2,17 @@ import { validationResult } from "express-validator";
 import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcryptjs";
 import { userObjType } from "../types/types";
-require("dotenv").config();
+import * as dotenv from "dotenv";
+dotenv.config();
 import {
   saveUser,
   findUserByEmail,
   findToken,
   saveToken,
-} from "../utils/databaseHandlers";
+} from "../databaseHandler/databaseHandlers";
 import { getTokens } from "../utils/utils";
 
 export const userReg = (req: Request, res: Response, next: NextFunction) => {
-  type userObjType = {
-    email: string;
-    password: string;
-  };
-
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -24,7 +20,7 @@ export const userReg = (req: Request, res: Response, next: NextFunction) => {
 
   const { email, password } = req.body;
   let userObj = {} as userObjType;
-  findUserByEmail(email)
+  const currentUser = findUserByEmail(email)
     .then((user) => {
       if (user) {
         return res
@@ -32,10 +28,8 @@ export const userReg = (req: Request, res: Response, next: NextFunction) => {
           .json({ message: "Conflict. User is already exists" });
       } else {
         return bcrypt.hash(password, 12).then((hashPasswd: string) => {
-          console.log("record", email, hashPasswd);
           userObj.email = email;
           userObj.password = hashPasswd;
-          console.log("userObj", userObj);
           saveUser(userObj);
           return res
             .status(201)

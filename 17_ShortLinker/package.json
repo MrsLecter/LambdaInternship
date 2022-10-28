@@ -5,7 +5,8 @@
   "main": "test.js",
   "scripts": {
     "start": "node ./dist/index",
-    "test": "tsc && node ./dist/index"
+    "test": "tsc && node ./dist/index",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",

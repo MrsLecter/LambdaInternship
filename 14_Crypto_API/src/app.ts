@@ -36,9 +36,9 @@ app.use(errHandler);
 
 try {
   app.listen(PORT || 3000, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.info(`Server is running on port ${PORT}`);
   });
 } catch (e) {
-  console.log(e);
+  console.error(e);
   throw new Error("An error occured");
 }

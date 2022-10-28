@@ -1,10 +1,10 @@
 import express, { Request, Response, NextFunction } from "express";
-import { save, findByRout, deleteByRout } from "../models/routs";
 import { isValidParam } from "../utils/uriValidator";
 import { RoutObjType } from "../types/types";
+import { db } from "../databaseHandler/database";
 
 export const getHome = (req: Request, res: Response, next: NextFunction) => {
-  res.status(200).json({ message: "Welcome to json starage!" });
+  return res.status(200).json({ message: "Welcome to json starage!" });
 };
 
 export const getСustom = async (
@@ -13,11 +13,11 @@ export const getСustom = async (
   next: NextFunction,
 ) => {
   try {
-    const routObject = await findByRout(req.params.rout);
+    const routObject = await db.findByRout(req.params.rout);
     if (routObject) {
-      res.status(200).json(routObject.obj);
+      return res.status(200).json(routObject.obj);
     }
-    res.status(400).json({ message: "Page not foud" });
+    return res.status(400).json({ message: "Page not foud" });
   } catch (error: any) {
     throw new Error(error);
   }
@@ -33,10 +33,10 @@ export const createCustom = async (
     let obj: RoutObjType = req.body;
     if (isValidParam(req.params.rout)) {
       obj.rout = req.params.rout;
-      await save(obj);
-      res.status(201).json({ message: "created new rout" });
+      await db.save(obj);
+      return res.status(201).json({ message: "created new rout" });
     }
-    res.status(400).json({ message: "Bad request. Change routs name" });
+    return res.status(400).json({ message: "Bad request. Change routs name" });
   } catch (error: any) {
     throw new Error(error);
   }
@@ -48,11 +48,11 @@ export const deleteCustom = async (
   next: NextFunction,
 ) => {
   try {
-    const routObject = await deleteByRout(req.params.rout);
+    const routObject = await db.deleteByRout(req.params.rout);
     if (!routObject) {
-      res.status(400).json({ message: "Object not found!" });
+      return res.status(400).json({ message: "Object not found!" });
     }
-    res.status(200).json({ message: "Successfully deleted" });
+    return res.status(200).json({ message: "Successfully deleted" });
   } catch (error: any) {
     throw new Error((error as Error).message);
   }

@@ -5,5 +5,5 @@ export const get404 = (
   res: Response,
   next: NextFunction,
 ) => {
-  res.status(404).json({ message: "Rout not found" });
+  return res.status(404).json({ message: "Rout not found" });
 };

@@ -3,7 +3,7 @@ import {
   getCurrentMarket,
   getCurrentCurrency,
   getAllFromPeriod,
-} from "../models/mainModels";
+} from "../functions/getData";
 import { ObjectRate } from "../types/types";
 import { getAverage } from "../utils/utils";
 
@@ -22,7 +22,7 @@ export const getDataForCertainPeriod = async (
 ) => {
   try {
     const dataFromPeriod = await getAllFromPeriod(+req.params.period);
-    res
+    return res
       .status(200)
       .json(
         Object.keys(dataFromPeriod[0]).length === 0
@@ -41,7 +41,7 @@ export const getDataForCertainCurrency = async (
 ) => {
   try {
     const currentCurreny = await getCurrentCurrency(req.params.currency, 30);
-    res
+    return res
       .status(200)
       .json(
         Object.keys(currentCurreny[0]).length === 0
@@ -61,7 +61,7 @@ export const getDataForCertainMarket = async (
   try {
     const market = req.params.market;
     const currentMarket = await getCurrentMarket(market);
-    res.status(200).json({ [market]: currentMarket });
+    return res.status(200).json({ [market]: currentMarket });
   } catch (err: any) {
     throw new Error(err);
   }

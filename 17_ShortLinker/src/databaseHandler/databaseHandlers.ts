@@ -1,9 +1,9 @@
 import { AuthDb } from "../entity/User";
 import { TokensDb } from "../entity/Tokens";
 import { UrlsDb } from "../entity/Urls";
-import { AppDataSource } from "../data-source";
+import { AppDataSource } from "./data-source";
 import { userObjType } from "../types/types";
-import { DBError, LackOfDataError } from "./errorHandler";
+import { DBError, LackOfDataError } from "../errorHandlers/errorHandler";
 
 export const saveUser = async ({
   email: email,

@@ -1,7 +1,7 @@
 export const getCurrencyList = (
   arr: { [currency: string]: string }[],
 ): string[] => {
-  if (!arr.length) {
+  if (!arr) {
     return ["Nothing"];
   }
   let currency: string[] = [];

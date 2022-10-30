@@ -1,78 +1,72 @@
 require("dotenv").config();
-import TelegramBot from "node-telegram-bot-api";
-import axios from "axios";
+process.env.NTBA_FIX_319 = String(1);
+const TelegramBot = require("node-telegram-bot-api");
 import {
-  addToFavourite,
-  deleteFromFavourites,
-  showAllFavourite,
-} from "./dbFunctions";
+  TelegramMessage,
+  MatchedCurrency,
+  ResponseData,
+  CallbackMessage,
+} from "./interfaces/interfaces";
+import axios from "axios";
+import { db } from "./databaseHandlers/dbInit";
 import { getCurrencyList, getStrinFromList } from "./utils/utils";
+import {
+  greetMessage,
+  helpMessage,
+  updateMessage,
+  showAverageMessage,
+} from "./constants/botMessages";
 
 const token = process.env.BOT_TOKEN;
 
 const bot = new TelegramBot(token, { polling: true });
 
 const start = () => {
-  bot.onText(/\/start/, (msg) => {
-    const chatId = msg.chat.id;
-    const message = "Hello! Write /help to see available command";
-
-    bot.sendMessage(chatId, message);
+  bot.onText(/\/start/, (msg: TelegramMessage) => {
+    bot.sendMessage(msg.chat.id, greetMessage);
   });
 
-  bot.onText(/\/help/, (msg) => {
-    bot.sendMessage(
-      msg.chat.id,
-      "Here is only the current rate of crypto from the most popular exchanges! Here's what I can do:" +
-        '\n/listRecent - gives a list of "hype" crypto;' +
-        "\n/listFavourite - returns the selected crypt sheet",
-    );
+  bot.onText(/\/help/, (msg: TelegramMessage) => {
+    bot.sendMessage(msg.chat.id, helpMessage);
   });
 
-  bot.onText(/\/listFavourite/, async (msg) => {
-    showAllFavourite(msg.chat.id)
-      .then((favourite) =>
-        bot.sendMessage(
-          msg.chat.id,
-          getStrinFromList(getCurrencyList(favourite[0])),
-        ),
-      )
-      .catch((err) => console.log(err));
+  bot.onText(/\/listFavourite/, async (msg: TelegramMessage) => {
+    const [favourite, _] = await db.showAllFavourite(msg.chat.id);
+    bot.sendMessage(msg.chat.id, getStrinFromList(getCurrencyList(favourite)));
   });
 
-  bot.onText(/\/addToFavourite_([A-Z]{3,5})/, async (msg, match_curr) => {
-    const chatId = msg.chat.id;
-    if (!match_curr) throw Error("Empty currency name");
-    const resp = match_curr[1];
+  bot.onText(
+    /\/addToFavourite_([A-Z]{3,5})/,
+    async (msg: TelegramMessage, match_curr: MatchedCurrency) => {
+      const chatId = msg.chat.id;
+      if (!match_curr) throw Error("Empty currency name");
+      const resp = match_curr[1] as string;
 
-    addToFavourite(resp, chatId)
-      .then((data) => bot.sendMessage(chatId, `${resp} added to favourite`))
-      .catch((err) => console.log(err));
-  });
+      await db.addToFavourite(resp, chatId);
+      bot.sendMessage(chatId, `${resp} added to favourite`);
+    },
+  );
 
-  bot.onText(/\/removeFromFavourite_([A-Z]{3,5})/, async (msg, match_curr) => {
-    const chatId = msg.chat.id;
-    if (!match_curr) throw Error("Empty currency name");
-    const resp = match_curr[1];
+  bot.onText(
+    /\/removeFromFavourite_([A-Z]{3,5})/,
+    async (msg: TelegramMessage, match_curr: MatchedCurrency) => {
+      const chatId = msg.chat.id;
+      if (!match_curr) throw Error("Empty currency name");
+      const resp = match_curr[1] as string;
 
-    deleteFromFavourites(resp, chatId)
-      .then((data) =>
-        bot.sendMessage(msg.chat.id, `${resp} removed from favourite`),
-      )
-      .catch((err) => console.log(err));
-  });
+      await db.deleteFromFavourites(resp, chatId);
+      bot.sendMessage(msg.chat.id, `${resp} removed from favourite`);
+    },
+  );
 
-  bot.onText(/\/listRecent/, async (msg) => {
+  bot.onText(/\/listRecent/, async (msg: TelegramMessage) => {
     axios
-      .get(`http://${process.env.API_HOST}/period/30`)
-      .then(function (response) {
+      .get(`http://${process.env.API_HOST}/period/60`)
+      .then((response) => {
         if (response.data === "") {
-          bot.sendMessage(
-            msg.chat.id,
-            "There are no records for the last 30 minutes. Update the data",
-          );
+          bot.sendMessage(msg.chat.id, updateMessage);
         }
-        let obj = response.data;
+        let obj: ResponseData = response.data;
         let formattedData = "";
         for (let item in obj) {
           if (
@@ -88,43 +82,45 @@ const start = () => {
           formattedData === "" ? "Repeat the request later" : formattedData,
         );
       })
-      .catch(function (error) {
-        console.log(error);
+      .catch((error) => {
+        console.error(error);
       });
   });
 
-  bot.onText(/\/[A-Z]{3,5}/, async (msg, match_curr) => {
-    const chatId = msg.chat.id;
-    if (!match_curr) throw Error("Empty currency name");
-    const resp = match_curr[1];
-    const currentCyrrency = match_curr[0].slice(1);
+  bot.onText(
+    /\/[A-Z]{3,5}/,
+    async (msg: TelegramMessage, match_curr: MatchedCurrency) => {
+      const chatId = msg.chat.id;
+      if (!match_curr) throw Error("Empty currency name");
+      const resp = match_curr[1];
+      const currentCyrrency = (match_curr[0] as string).slice(1);
 
-    showAllFavourite(chatId).then((favourite) => {
+      const favourite = await db.showAllFavourite(chatId);
       const currencyList = getCurrencyList(favourite[0]);
       if (currencyList.includes(currentCyrrency)) {
         bot.sendMessage(chatId, "/removeFromFavourite_" + currentCyrrency);
       } else {
         bot.sendMessage(chatId, "/addToFavourite_" + currentCyrrency);
       }
-    });
 
-    bot.sendMessage(chatId, "To derive the average price for the last ones:", {
-      reply_markup: JSON.stringify({
-        inline_keyboard: [
-          [
-            { text: "30 min", callback_data: `30 ${currentCyrrency}` },
-            { text: "1 h", callback_data: `1 ${currentCyrrency}` },
-            { text: "3 h", callback_data: `3 ${currentCyrrency}` },
-            { text: "6 h", callback_data: `6 ${currentCyrrency}` },
-            { text: "12 h", callback_data: `12 ${currentCyrrency}` },
-            { text: "24 h", callback_data: `24 ${currentCyrrency}` },
+      bot.sendMessage(chatId, showAverageMessage, {
+        reply_markup: JSON.stringify({
+          inline_keyboard: [
+            [
+              { text: "30 min", callback_data: `30 ${currentCyrrency}` },
+              { text: "1 h", callback_data: `1 ${currentCyrrency}` },
+              { text: "3 h", callback_data: `3 ${currentCyrrency}` },
+              { text: "6 h", callback_data: `6 ${currentCyrrency}` },
+              { text: "12 h", callback_data: `12 ${currentCyrrency}` },
+              { text: "24 h", callback_data: `24 ${currentCyrrency}` },
+            ],
           ],
-        ],
-      }),
-    });
-  });
+        }),
+      });
+    },
+  );
 
-  bot.on("callback_query", async (msg) => {
+  bot.on("callback_query", async (msg: CallbackMessage) => {
     if (!msg.data || !msg.message) throw Error("Message data not found");
     const data = msg.data.split(" ");
     const chatId = msg.message.chat.id;
@@ -143,7 +139,7 @@ const start = () => {
       })
 
       .catch(function (error) {
-        console.log(error);
+        console.error(error);
       });
   });
 

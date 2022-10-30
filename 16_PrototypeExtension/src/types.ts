@@ -5,7 +5,7 @@ declare global {
      * @param factor optional multiplier for each element of the array.
      * @return String number with decimal precision.
      */
-    multiply(factor?: number): number[];
+    multiply<T>(factor?: number): number[];
     /**
      * Returns true if all elements match the given predicate.
      * @param arr Array of numbers
@@ -115,7 +115,7 @@ declare global {
   }
 }
 
-Array.prototype.multiply = function (factor: number = 10): number[] {
+Array.prototype.multiply = function<T>(factor: number = 10): number[] {
   let multiplied: number[] = [];
   this.forEach((elem) => {
     elem = isNaN(parseFloat(elem)) ? 0 : parseFloat(elem);
@@ -123,6 +123,9 @@ Array.prototype.multiply = function (factor: number = 10): number[] {
   });
   return multiplied;
 };
+
+
+
 
 Array.prototype.all = function (callback): boolean {
   for (let i = 0; i < this.length; i++) {

@@ -30,7 +30,7 @@ export const getDataForCertainPeriod = async (
           : getAverage(dataFromPeriod[0] as ObjectRate[]),
       );
   } catch (err: any) {
-    throw new Error(err);
+    throw new Error((err as Error).message);
   }
 };
 
@@ -40,16 +40,19 @@ export const getDataForCertainCurrency = async (
   next: NextFunction,
 ) => {
   try {
-    const currentCurreny = await getCurrentCurrency(req.params.currency, 30);
+    const [currentCurrency, _]: [ObjectRate[], any] = await getCurrentCurrency(
+      req.params.currency,
+      30,
+    );
     return res
       .status(200)
       .json(
-        Object.keys(currentCurreny[0]).length === 0
+        Object.keys(currentCurrency[0]).length === 0
           ? { message: "No data for current period" }
-          : getAverage(currentCurreny[0] as ObjectRate[]),
+          : getAverage(currentCurrency),
       );
   } catch (err: any) {
-    throw new Error(err);
+    throw new Error((err as Error).message);
   }
 };
 
@@ -60,9 +63,9 @@ export const getDataForCertainMarket = async (
 ) => {
   try {
     const market = req.params.market;
-    const currentMarket = await getCurrentMarket(market);
+    const currentMarket: ObjectRate = await getCurrentMarket(market);
     return res.status(200).json({ [market]: currentMarket });
   } catch (err: any) {
-    throw new Error(err);
+    throw new Error((err as Error).message);
   }
 };

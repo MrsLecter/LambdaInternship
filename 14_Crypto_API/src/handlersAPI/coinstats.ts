@@ -3,7 +3,7 @@ import { POPULAR_CURRENCY } from "../constants";
 import { ObjectCurrencyCoinstats } from "../interfaces/interfaces";
 require("dotenv").config();
 
-const getFilteredData = (
+const getFilteredDataCoinstats = (
   data: ObjectCurrencyCoinstats[],
   required_currency: string[],
 ): {
@@ -36,7 +36,10 @@ module.exports = new Promise<object>(async (resolve, reject) => {
     }
   }
   if (response) {
-    const filtered = getFilteredData(response.data.coins, POPULAR_CURRENCY);
+    const filtered = getFilteredDataCoinstats(
+      response.data.coins,
+      POPULAR_CURRENCY,
+    );
     resolve(filtered);
   }
 });

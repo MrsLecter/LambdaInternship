@@ -34,3 +34,11 @@ export const admissibleMarkets = [
   "coinstats",
   "kucoin",
 ];
+
+export enum marketsUrlResourcesEnum {
+  coinmarket = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest",
+  coinpaprika = "https://api.coinpaprika.com/v1/tickers",
+  coinstats = "https://api.coinstats.app/public/v1/coins?skip=0&limit=25&currency=USD",
+  kucoin = "https://api.kucoin.com/api/v1/prices?base=USD",
+  coinbase = "https://api.coinbase.com/v2/exchange-rates?currency=",
+}

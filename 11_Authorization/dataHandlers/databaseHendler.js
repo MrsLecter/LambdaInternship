@@ -1,91 +1,65 @@
 const mongo = require("mongodb");
-const MongoClient = mongo.MongoClient;
+const mongoClient = mongo.MongoClient;
 require("dotenv").config();
 
-let _db;
-
-const mongoConnect = (callback) => {
-  MongoClient.connect(process.env.MONGO_STR)
-    .then((client) => {
-      console.log("MongoDB connected ... ");
-      _db = client.db();
-      callback(client);
-    })
-    .catch((err) => {
-      console.error(err);
-      throw err;
-    });
-};
-/*
-const getDB = () => {
-  if (_db) {
-    return _db;
-  }
-  throw "No database found!";
-};
-
-exports.getDB = getDB;
-exports.mongoConnect = mongoConnect;
-*/
-
 class MongoHandler {
-  constructor() {
-    this.client = new MongoClient(process.env.MONGO_STR);
+  async connect() {
+    try {
+      const connection = await mongoClient.connect(process.env.MONGO_STR, {
+        useNewUrlParser: true,
+      });
+      this.db = connection.db(process.env.MONGO_DB);
+      console.info("MongoClient Connection successfull.");
+    } catch (err) {
+      const error = new Error(err);
+      console.error(error);
+    }
   }
+
   async saveUser(obj) {
-    await this.client
-      .collection("users")
-      .insertOne(obj)
-      .catch((err) => {
-        throw new Error(err);
-      });
-    await this.client.close();
+    try {
+      await this.db.collection("users").insertOne(obj);
+    } catch (err) {
+      const error = new Error(err);
+      console.error(error);
+    }
   }
+
   async findUserByEmail(email) {
-    const user = await this.client
-      .collection("users")
-      .find({ email: email })
-      .next()
-      .then((data) => {
-        return data;
-      })
-      .catch((err) => {
-        throw new Error(err);
-      });
-    this.client.close();
-    return user;
+    try {
+      const user = await this.db
+        .collection("users")
+        .find({ email: email })
+        .next();
+      return user;
+    } catch (err) {
+      const error = new Error(err);
+      console.error(error);
+    }
   }
 
-  async saveTokens(obj) {
-    await this.client
-      .collection("user_data")
-      .updateOne(
-        { user: "current" },
-        {
-          $set: { email: obj.email },
-          $set: { refreshToken: obj.refreshToken },
-        },
-      )
-      .catch((err) => {
-        throw new Error(err);
-      });
-    this.client.close();
+  async saveToken(obj) {
+    try {
+      await this.db
+        .collection("expired_tokens")
+        .insertOne({ user: obj.email, refreshToken: obj.refreshToken });
+    } catch (err) {
+      const error = new Error(err);
+      console.error(error);
+    }
   }
 
-  async findTokens() {
-    const token = await this.client
-      .collection("user_data")
-      .find({ user: "current" })
-      .next()
-      .then((data) => {
-        return data;
-      })
-      .catch((err) => {
-        throw new Error(err);
-      });
-    this.client.close();
+  async findTokens(userToken) {
+    try {
+      const dbToken = await this.db
+        .collection("expired_tokens")
+        .find({ refreshToken: userToken })
+        .next();
+      return dbToken;
+    } catch (err) {
+      const error = new Error(err);
+      console.error(error);
+    }
   }
 }
-
 exports.db = new MongoHandler();
-exports.mongoConnect = mongoConnect;

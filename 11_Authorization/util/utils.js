@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const { saveTokens } = require("../dataHandlers/dataAccess");
 require("dotenv").config();
 
 const getRandomTTL = () => {
@@ -14,12 +13,6 @@ const getTokens = (userEmail) => {
   const refreshToken = jwt.sign({ email: userEmail }, process.env.SECRET_KEY);
   const token = jwt.sign({ email: userEmail }, process.env.SECRET_KEY, {
     expiresIn: ttl,
-  });
-  saveTokens({
-    user: "curent",
-    email: userEmail,
-    accessToken: token,
-    refreshToken,
   });
   return { accessToken: token, refreshToken: refreshToken, TTL: ttl };
 };

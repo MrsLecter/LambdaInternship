@@ -1,5 +1,5 @@
 const bodyParser = require("body-parser");
-const mongoConnect = require("./dataHandlers/databaseHendler").mongoConnect;
+const { db } = require("./dataHandlers/databaseHendler");
 const express = require("express");
 const app = express();
 
@@ -15,11 +15,9 @@ app.use((error, req, res, next) => {
 });
 
 try {
-  mongoConnect((client) => {
-    app.listen(PORT);
-  });
-  console.log(`Server is listening in port ${PORT}`);
-} catch (e) {
-  console.log(e);
+  db.connect();
+  app.listen(PORT, () => console.info(`Server is listening in port ${PORT}`));
+} catch (err) {
+  console.log(err);
   throw new Error("An Error occured");
 }

@@ -4,6 +4,7 @@ import { UrlsDb } from "../entity/Urls";
 import { AppDataSource } from "./data-source";
 import { userObjType } from "../types/types";
 import { DBError, LackOfDataError } from "../errorHandlers/errorHandler";
+require("dotenv").config();
 
 export const saveUser = async ({
   email: email,
@@ -13,7 +14,7 @@ export const saveUser = async ({
     throw new LackOfDataError("Send email and password");
   }
   AppDataSource.initialize()
-    .then(async (appDataSource) => {
+    .then(async (_) => {
       const userObj = new AuthDb();
       userObj.email = email;
       userObj.password = password;
@@ -36,7 +37,7 @@ export const findUserByEmail = async (
     .then(async () => {
       const authRepository = AppDataSource.getRepository(AuthDb);
       const userObj = await authRepository.findOneBy({
-        email: email,
+        email,
       });
       AppDataSource.destroy();
       return userObj;
@@ -52,7 +53,7 @@ export const saveToken = async (token: string): Promise<void> => {
     throw new LackOfDataError("Token not provided!");
   }
   AppDataSource.initialize()
-    .then(async (appDataSource) => {
+    .then(async (_) => {
       const tokensDb = new TokensDb();
       tokensDb.token = token;
       await AppDataSource.manager.save(tokensDb);
@@ -70,6 +71,7 @@ export const findToken = async (
   if (!token) {
     throw new LackOfDataError("Token not provided!");
   }
+
   return AppDataSource.initialize()
     .then(async () => {
       const authRepository = AppDataSource.getRepository(TokensDb);
@@ -89,11 +91,12 @@ export const findAllUrls = async (email: string | undefined) => {
   if (!email) {
     throw new LackOfDataError("Email not provided!");
   }
+
   return AppDataSource.initialize()
     .then(async () => {
       const authRepository = AppDataSource.getRepository(UrlsDb);
       const usersObj = await authRepository.findBy({
-        email: email,
+        email,
       });
       AppDataSource.destroy();
       return usersObj;

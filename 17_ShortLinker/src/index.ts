@@ -8,6 +8,7 @@ import morgan from "morgan";
 import fs from "fs";
 import path from "path";
 import { get404 } from "./controllers/error";
+
 const PORT = process.env.port || 3000;
 
 const app = express();
@@ -31,9 +32,9 @@ app.use(<ErrorRequestHandler>((err, req, res, next) => {
 
 try {
   app.listen(PORT, () => {
-    console.log(`Server is listening in port ${PORT}`);
+    console.info(`Server is listening in port ${PORT}`);
   });
 } catch (e) {
-  console.log(e);
+  console.error(e);
   throw new Error("An Error occured in app.listen");
 }

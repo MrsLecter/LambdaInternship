@@ -10,7 +10,7 @@ const { body } = require("express-validator");
 const { authenticateToken } = require("../middleware/auth_middleware");
 
 router.post(
-  "/sign_up",
+  "/signup",
   body("email").isEmail(),
   body("password").isLength({ min: 6 }),
   userReg,

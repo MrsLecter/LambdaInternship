@@ -6,19 +6,12 @@ import {
   prettiedUrlObjType,
 } from "../types/types";
 import { LackOfDataError } from "../errorHandlers/errorHandler";
+import { validateUrlRegExp } from "../constants";
 require("dotenv").config();
 
 export const isValidUrl = (url: string): boolean => {
   try {
-    const urlPattern = new RegExp(
-      "^(https?:\\/\\/)?" +
-        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" +
-        "((\\d{1,3}\\.){3}\\d{1,3}))" +
-        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" +
-        "(\\?[;&a-z\\d%_.~+=-]*)?" +
-        "(\\#[-a-z\\d_]*)?$",
-      "i",
-    );
+    const urlPattern = new RegExp(validateUrlRegExp);
 
     return Boolean(new URL(url)) && !!urlPattern.test(url);
   } catch (e) {
@@ -38,7 +31,7 @@ export const getTokens = (userEmail: string): newTokenObjType => {
     throw new LackOfDataError("User email not provided");
   }
   const ttl = getRandomTTL();
-  const refreshToken = uuid();
+  const refreshToken = jwt.sign({ email: userEmail }, process.env.SECRET_JWT);
   const token = jwt.sign({ email: userEmail }, process.env.SECRET_JWT, {
     expiresIn: ttl,
   });

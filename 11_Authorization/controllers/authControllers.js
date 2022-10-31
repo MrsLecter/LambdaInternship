@@ -3,11 +3,12 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const url = require("url");
 require("dotenv").config();
-const {
-  saveUser,
-  findUserByEmail,
-  findTokens,
-} = require("../dataHandlers/dataAccess");
+// const {
+//   saveUser,
+//   findUserByEmail,
+//   findTokens,
+// } = require("../dataHandlers/dataAccess");
+const { db } = require("../dataHandlers/databaseHendler");
 const { getTokens } = require("../util/utils");
 
 exports.userReg = async (req, res, next) => {
@@ -17,14 +18,14 @@ exports.userReg = async (req, res, next) => {
   }
   try {
     const { email, password } = req.body;
-    const userFromDb = await findUserByEmail(email);
+    const userFromDb = await db.findUserByEmail(email);
     if (userFromDb) {
       return res
         .status(409)
         .json({ message: "Conflict. User is already exists" });
     }
     const hashFromPassword = await bcrypt.hash(password, 12);
-    saveUser({
+    await db.saveUser({
       email: email,
       password: hashFromPassword,
     });
@@ -38,7 +39,7 @@ exports.userReg = async (req, res, next) => {
 exports.logIn = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const userFromDb = await findUserByEmail(email);
+    const userFromDb = await db.findUserByEmail(email);
     if (!userFromDb) {
       res.status(403).json({ " message": "Not found. Please, register first" });
     }
@@ -76,7 +77,7 @@ exports.getMe = (req, res, next) => {
 
 exports.refresh = async (req, res, next) => {
   const token = req.headers.authorization.split(" ")[1];
-  const findToken = await findTokens();
+  const findToken = await db.findTokens();
   if (findToken.refreshToken === token) {
     return res.status(202).json({
       message: "New refresh token received",

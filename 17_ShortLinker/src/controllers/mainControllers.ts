@@ -1,10 +1,9 @@
-import express, { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import { isValidUrl, getPrettierUrls } from "../utils/utils";
 import { UrlsDb } from "../entity/Urls";
 import { AppDataSource } from "../databaseHandler/data-source";
 import { LackOfDataError } from "../errorHandlers/errorHandler";
 import { findAllUrls } from "../databaseHandler/databaseHandlers";
-import jwt from "jsonwebtoken";
 import shortid from "shortid";
 
 export const startPage = (
@@ -25,6 +24,7 @@ export const redirectUrl = async (
   if (!req.params.address) {
     throw new LackOfDataError("Address can't be empty");
   }
+
   let firstUrl;
   AppDataSource.initialize()
     .then(async () => {
@@ -32,13 +32,12 @@ export const redirectUrl = async (
       firstUrl = await urlRepository.findOneBy({
         url_shorted: req.params.address,
       });
-      if (firstUrl === null) {
-        res
+      if (!firstUrl) {
+        return res
           .status(400)
           .json({ message: `Url [${req.params.address}] not found` });
-      } else {
-        res.redirect(firstUrl.url);
       }
+      return res.redirect(firstUrl.url);
     })
     .catch((err: any) => {
       const error = new Error((err as Error).message);
@@ -57,9 +56,10 @@ export const receiveUrl = async (
   if (!isValidUrl(req.body.url)) {
     res.status(400).json({ message: "The entered url is not valid" });
   }
+
   let shortedUrl = req.body.alias ? req.body.alias : shortid.generate();
   AppDataSource.initialize()
-    .then(async (appDataSource) => {
+    .then(async (_) => {
       const urlDb = new UrlsDb();
       urlDb.email = req.body.email;
       urlDb.url = req.body.url;
@@ -86,6 +86,7 @@ export const showAllShortedUrls = async (
   next: NextFunction,
 ) => {
   const { email } = req.body;
+
   findAllUrls(email)
     .then((urls) => {
       if (!urls) {
@@ -94,7 +95,7 @@ export const showAllShortedUrls = async (
         });
       }
       res.status(200).json({
-        email: email,
+        email,
         urls: getPrettierUrls(urls),
       });
     })

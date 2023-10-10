@@ -231,3 +231,31 @@ Description
 </p>
 </details>
 
+<details><summary>16_PrototypeExtension</summary>
+<p>
+
+#### [*Watch code*](https://github.com/MrsLecter/internship/tree/main/16_PrototypeExtension)
+
+```
+Description
+
+- use generics for types
+
+ ```
+</p>
+</details>
+
+<details><summary>17_ShortLinker</summary>
+<p>
+
+#### [*Watch code*](https://github.com/MrsLecter/internship/tree/main/17_ShortLinker)
+
+```
+Description
+
+- make your links shorter (tinyurl clone)
+
+ ```
+</p>
+</details>
+
